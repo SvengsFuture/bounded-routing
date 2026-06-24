@@ -106,10 +106,11 @@ task arrives
          |
          +-- found, ACTIVE or WARNED
                |
-               +--> gate 1: C_success >= T_bypass?          NO --> full analysis
-               +--> gate 2: structural_cost <= T_cost?       NO --> full analysis
-               +--> gate 3: recovery_context OK?             NO --> full analysis
-               +--> gate 4: anti-oscillation OK?             NO --> full analysis
+              +--> gate 1: C_success >= T_bypass?          NO --> full analysis
++--> gate 2: depreciation state permits?     NO --> full analysis
++--> gate 3: structural_cost <= T_cost?      NO --> full analysis
++--> gate 4: recovery_context OK?            NO --> full analysis
++--> gate 5: anti-oscillation OK?             NO --> full analysis
                |
                all pass
                |
