@@ -115,6 +115,4 @@ structural gate, not a confidence threshold adjustment.
 - The 120-degree spacing analogy does not apply here; topology is logical,
   not angular
 
-The claim is that bounded routing produces fewer admissibility violations,
-fewer oscillation events, and lower structural cost over time compared to
-naive adaptive bypass, while still reducing latency versus full analysis.
+The supported v1 result is narrower: bounded routing reduces latency versus full analysis and prevents oscillation-related wrong bypasses when the anti-oscillation gate is active. Drift separation is modest, recovery shows conservative fallback, and the structural-cost gate is not a strong discriminator in this configuration.
