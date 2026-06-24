@@ -28,8 +28,7 @@ No admissibility violations in any arm. Latency: A=40ms, B=9.6ms, C=10.5ms.
 Route quality for pattern 0 degrades linearly from 1.0 to 0.2.
 B accumulates 114 admissibility violations. C accumulates 101.
 Separation is modest here. Both arms detect the degradation through
-confidence decay. C's structural cost gate begins gating bypass earlier
-but the difference in violations is not large in this phase.
+confidence decay.The separation is modest because confidence decay drives most of the fallback behavior in both arms. The structural-cost gate does not become a strong discriminator in this v1 configuration.
 
 ### Fault phase
 Route quality collapses to 0.1. Both B and C deplete confidence
@@ -41,11 +40,7 @@ on violations — it differentiates them on how quickly they recover
 (not measured in v1).
 
 ### Recovery phase
-System signals a recovery event. Arm C blocks bypass for
-recovery-sensitive routes for T_recovery_blackout_ms=5000ms.
-Fallback rate: B=7.1%, C=36.3%. C correctly increases fallback during
-the blackout period. B continues bypassing immediately.
-Admissibility violations: B=33, C=31. Modest difference.
+System signals a recovery event. Arm C blocks bypass for recovery-sensitive routes for T_recovery_blackout_ms=5000ms. Fallback rate: B=7.1%, C=36.3%. C correctly increases fallback during the blackout period, while B continues bypassing immediately. Total admissibility violations are B=33 and C=31. However, because C performs fewer bypasses, its wrong-bypass rate is slightly higher during recovery. This phase supports conservative fallback behavior, not a clean per-bypass safety advantage.
 
 ### Oscillation phase
 Two competing routes alternate quality every 4 seconds.
@@ -67,7 +62,7 @@ it does not enforce a gate). Wrong bypass rate: B=1.1%, C=0.0%.
 | Bounded routing is faster than full analysis | SUPPORTED — C latency 9.8-19.6ms vs A=40ms across phases |
 | Bounded routing accumulates fewer oscillation violations | SUPPORTED |
 | Recovery blackout gate increases fallback rate correctly | SUPPORTED — C=36.3% vs B=7.1% during recovery |
-| Bounded routing is always safer than naive cache | PARTIAL — drift and fault show modest or no separation; oscillation shows strong separation |
+| Bounded routing is always safer than naive cache | NOT SUPPORTED AS A GENERAL CLAIM — drift separation is modest, fault converges, recovery does not show a per-bypass safety advantage, and oscillation shows strong separation|
 | Bounded routing eliminates all wrong bypasses | NOT CLAIMED and not shown — drift and recovery phases show nonzero wrong bypass rate in C |
 
 ---
@@ -103,8 +98,9 @@ That result is clean.
 
 ## Series status
 
-v1 is the initial harness. The mechanism is validated on the oscillation
-and recovery scenarios. Drift and fault convergence is noted honestly.
+v1 is the initial harness. The anti-oscillation mechanism is validated in the oscillation scenario. The recovery gate shows conservative fallback behavior, but not a clear per-bypass safety advantage.
+
+ Drift and fault convergence is noted honestly.
 
 If future work models slower confidence decay, route-specific alpha values,
 or multi-pattern fault cascades, the fault and drift separation may widen.
