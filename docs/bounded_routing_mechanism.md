@@ -70,11 +70,13 @@ C_success. No other component modifies route confidence directly.
 
 Decision logic at task arrival:
 
-    1. PRE produces S_pat from task
-    2. ARD lookup: does S_pat have an ACTIVE route with C_success >= T_bypass?
-    3. If yes: check structural cost, recovery context, anti-oscillation gate
-    4. If all pass: delegate along P_opt (bounded bypass)
-    5. If any fail: full analysis, SMS records outcome, ARD updated
+ 1. PRE produces S_pat from the task
+2. ARD lookup returns the current route state for S_pat
+3. Check confidence: C_success >= T_bypass
+4. Check depreciation state, structural cost, recovery context, and anti-oscillation status
+5. If all five bypass checks pass: delegate along P_opt
+6. If any check fails: route to full analysis
+7. SMS records the outcome and ARD is updated
 
 T_bypass is a per-system parameter, not hardcoded.
 Higher T_bypass = more conservative bypass. Lower = more aggressive.
