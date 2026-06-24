@@ -18,7 +18,7 @@ THREE ARMS
   B_NAIVE_CACHE     : bypass when confidence >= T_bypass. No structural
                       bounds, no depreciation, no anti-oscillation, no
                       recovery blackout.
-  C_BOUNDED_ROUTING : full ARD/SMS/IBM stack. All four bypass gates active.
+  C_BOUNDED_ROUTING : full ARD/SMS/IBM stack. All five bypass gates active.
 
 TASK STREAM PHASES
 ------------------
