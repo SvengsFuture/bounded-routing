@@ -13,7 +13,7 @@ Results reported as-is. No tuning to favor any arm.
 |-----|-------|-------------|
 | A | A_FULL_ANALYSIS | Every task takes the full path. No bypass. Admissibility always satisfied. |
 | B | B_NAIVE_CACHE | Bypass when confidence >= T_bypass. No structural bounds, no depreciation, no anti-oscillation, no recovery blackout. |
-| C | C_BOUNDED_ROUTING | Full ARD/SMS/IBM stack. All four bypass gates active. |
+| C | C_BOUNDED_ROUTING | Full ARD/SMS/IBM stack. All five bypass gates active. |
 
 ---
 
