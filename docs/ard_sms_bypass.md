@@ -120,12 +120,10 @@ task arrives
 
 ### Anti-oscillation gate
 
-Bypass is blocked if:
-  (current_time_ms - last_flip_ms) < T_flip_cooldown
-
-AND
-
-  flip_count in last T_flip_window exceeds MAX_FLIPS_PER_WINDOW
+Bypass is blocked if either condition is true:
+(current_time_ms - last_flip_ms) < T_flip_cooldown
+OR
+the number of flips in the last T_flip_window is greater than or equal to MAX_FLIPS_PER_WINDOW.
 
 This prevents the system from rapidly alternating between two routes
 that both have borderline confidence.
