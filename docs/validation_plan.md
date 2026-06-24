@@ -36,7 +36,7 @@ This arm will show good throughput under stable conditions and
 break down under fault injection, confidence drift, and recovery events.
 
 ### Arm C — Bounded routing
-Full ARD/SMS/IBM stack. All four bypass gates active. Depreciation
+Full ARD/SMS/IBM stack. All five bypass gates active. Depreciation
 state machine, anti-oscillation, recovery blackout, structural cost
 bounds. Falls back to full analysis when any bound is violated.
 
