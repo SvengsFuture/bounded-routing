@@ -11,9 +11,8 @@ The supported mechanism is bounded route admissibility: pattern history,
 confidence, structural cost, recovery context, depreciation state, and
 anti-oscillation rules jointly decide whether a learned route can execute.
 
-Route selection governed by these admissibility bounds produces fewer
-violations and more stable behavior than naive confidence-based bypass,
-while still reducing cost versus full analysis.
+In the v1 simulation, bounded routing reduces latency versus full analysis and shows its clearest safety advantage over naive confidence bypass when route instability triggers the anti-oscillation gate.
+
 
 ---
 
@@ -36,13 +35,14 @@ Admissibility carries the highest weight. SMS is the only component
 that writes confidence. No other component modifies C_success directly.
 
 **Intelligent Bypass Mechanism (IBM)**
-Four-gate decision at task arrival:
+Five-gate decision at task arrival:
 1. Confidence gate: C_success >= T_bypass?
-2. Structural cost gate: cost within tolerance?
-3. Recovery context gate: not in post-recovery blackout?
-4. Anti-oscillation gate: flip count within bounds?
+2. Depreciation gate: route state still permits bypass?
+3. Structural cost gate: cost within tolerance?
+4. Recovery context gate: not in post-recovery blackout?
+5. Anti-oscillation gate: flip count within bounds?
 
-All four must pass for bypass. Any failure routes to full analysis.
+All five must pass for bypass. Any failure routes to full analysis.
 
 ---
 
@@ -77,12 +77,13 @@ bounded_routing/
 | Phase | B violations | C violations | Result |
 |-------|-------------|-------------|--------|
 | stable | 0 | 0 | Both clean |
-| drift | 114 | 101 | C slightly safer |
+| drift | 114 | 101 | Modest separation; structural-cost gating is not a strong discriminator in v1 |
 | fault | 0 | 0 | Converged (fault is severe, both arms fall back) |
-| recovery | 33 | 31 | C slightly safer; fallback rate correctly higher |
+| recovery | 33 | 31 | Conservative fallback; fewer total violations, but no per-bypass safety advantage |
 | oscillation | 64 | 0 | **C clearly safer** — anti-oscillation gate works |
 
-Latency: C is 4x faster than full analysis across all phases.
+Latency: C remains faster than full analysis across all phases.
+
 Wrong bypass rate in oscillation phase: B=1.1%, C=0.0%.
 
 ---
