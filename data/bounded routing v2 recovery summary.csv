@@ -1,0 +1,5 @@
+phase,arch,k_requalify,mean_time_to_requalify_ms,route_instances_requalified,distinct_pattern_ids_requalified,route_instances_remaining_requalifying,patterns_deprecated_during_requalification,shadow_checks_total,shadow_checks_admissible,post_requalify_bypasses,post_requalify_wrong_bypasses,post_requalify_wrong_bypass_rate,matched_tasks,matched_bypasses,matched_wrong_bypasses,matched_wrong_bypass_rate,matched_fallback_rate,wrong_bypasses_0-3s,wrong_bypasses_3-6s,wrong_bypasses_6-9s,wrong_bypasses_9-12s,wrong_bypasses_12-15s,fallback_rate_0-3s,fallback_rate_3-6s,fallback_rate_6-9s,fallback_rate_9-12s,fallback_rate_12-15s
+recovery,A_FULL_ANALYSIS,5,,0,0,0,0,0,0,0,0,0.0,0,0,0,0.0,0.0,0,0,0,0,0,0.0,0.0,0.0,0.0,0.0
+recovery,B_NAIVE_CACHE,5,,0,0,0,0,0,0,0,0,0.0,3104,3104,0,0.0,0.0,0,0,10,17,8,0.12266666666666666,0.13066666666666665,0.08,0.034666666666666665,0.0026666666666666666
+recovery,C_TIMER_BOUND,5,,0,0,0,0,0,0,0,0,0.0,3104,2186,0,0.0,29.574742268041238,0,0,7,18,8,1.0,0.7106666666666667,0.09066666666666667,0.016,0.0
+recovery,D_REQUALIFYING,5,816.0,35,7,0,5,252,187,3104,0,0.0,3104,3104,0,0.0,0.0,0,0,0,0,0,0.356,0.13066666666666665,0.124,0.12266666666666666,0.128

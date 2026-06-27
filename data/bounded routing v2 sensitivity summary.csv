@@ -1,0 +1,4 @@
+k_requalify,final_ACTIVE,final_REQUALIFYING,final_DEPRECATED,wrong_bypasses,wrong_bypass_rate_pct,bypass_count,fallback_rate_pct,mean_time_to_requalify_ms
+3,37,0,3,15,0.462,3246,13.44,882.2
+5,35,0,5,0,0.0,3104,17.23,816.0
+8,35,0,5,0,0.0,2999,20.03,1321.7
