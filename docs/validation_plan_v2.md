@@ -86,7 +86,7 @@ A clean shadow check means that the candidate route produces an admissible resul
 
 Admissibility controls the consecutive K_REQUALIFY count.
 
-Shadow latency, route quality, structural cost, and stability also contribute to the shadow observation’s SMS outcome score.
+Shadow latency, admissibility, route quality, and stability contribute to the shadow observation’s SMS outcome score. Structural cost is recorded and evaluated separately through the structural-cost gate.
 
 For every shadow observation:
 
