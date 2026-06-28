@@ -1,90 +1,86 @@
 # File Map
 
-## What each file is and why it exists
+What each file is and why it exists.
 
-### Root
+## Root
 
-`README.md`
-Public entry point. Mechanism summary, component overview, key results,
-what this does not claim. Start here.
+**README.md**
+Public entry point. Mechanism summary, component overview, key results, scope boundaries, and repository status. Start here.
 
-`ROUTING_VERDICT.md`
-Honest simulation verdict. Results by phase, supported and unsupported
-claims, notes on fault/drift convergence, series status.
+**ROUTING_VERDICT.md**
+Honest verdict for the v1 and v2 simulation series. Records supported, unsupported, and inconclusive claims without retroactively changing the tests.
 
-`FILE_MAP.md`
+**FILE_MAP.md**
 This file.
 
----
+## docs/
 
-### docs/
+**bounded_routing_mechanism.md**
+Core mechanism reference. Defines bounded routing, the PRE, ARD, SMS, and IBM components, the admissibility constraint, and the limits of the claim.
 
-`bounded_routing_mechanism.md`
-Core mechanism reference. Defines bounded routing, all four components
-(PRE, ARD, SMS, IBM), the admissibility constraint, and what bounded
-routing does not claim. The conceptual anchor for the whole package.
+**ard_sms_bypass.md**
+Component data model and parameter reference. Includes the ARD entry structure, depreciation states, SMS scoring, IBM decision sequence, and anti-oscillation gate logic.
 
-`ard_sms_bypass.md`
-Component data model and parameter table. ARD entry schema,
-depreciation state machine, SMS outcome scoring formula,
-IBM decision sequence, anti-oscillation gate logic.
-Reference document for simulation implementation.
+**validation_plan.md**
+Original v1 validation plan. Defines the three simulation arms, five workload phases, expected behavior, go/no-go criteria, and scope boundaries. Written before the v1 simulation was run.
 
-`validation_plan.md`
-What the simulation tests, why each phase was chosen, expected behavior
-per arm per phase, go/no-go criteria, and scope boundaries.
-Written before the simulation was run. Not updated to match results
-retroactively.
+**validation_plan_v2.md**
+Pre-run plan for the v2 recovery requalification test. Defines the four arms, fresh post-recovery evidence requirement, route-state transitions, sensitivity values, assertions, and partial-support verdict boundary.
 
----
+## scripts/
 
-### scripts/
+**bounded_routing_sim_v1.py**
+Original three-arm simulation harness. Uses stable, drift, fault, recovery, and oscillation phases. Preserved as the v1 technical record.
 
-`bounded_routing_sim_v1.py`
-Three-arm simulation harness. Synthetic task stream with five phases:
-stable, drift, fault injection, recovery event, oscillation trigger.
-Deterministic seeding. All parameters documented in the file header.
-Run directly: `python scripts/bounded_routing_sim_v1.py`.
+Run directly:
 
----
+`python scripts/bounded_routing_sim_v1.py`
 
-### data/
+**bounded routing sim v2.py**
+Four-arm recovery requalification simulation. Compares full analysis, naive cache restoration, timer-bound restoration, and earned restoration using fresh shadow evidence.
 
-`bounded_routing_v1_raw.csv`
-One row per task per arm per seed. Fields: time_ms, pattern_id, phase,
-arch, seed, bypassed, admissible, wrong_bypass, latency_ms,
-structural_cost, fallback, oscillation_event, depreciation_event.
+The script includes deterministic task manifests, state-machine assertions, primary `K=5` testing, and sensitivity runs at `K=3`, `K=5`, and `K=8`.
 
-`bounded_routing_v1_summary.csv`
-Aggregated metrics per arm per phase. Mean and p95 latency,
-wrong bypass rate, fallback rate, admissibility violations,
-oscillation events, structural cost, depreciation events,
-successful bounded bypass count.
+Run directly:
 
----
+`python "scripts/bounded routing sim v2.py"`
 
-### plots/
+## data/
 
-`latency_by_phase_v1.png`
-Mean and p95 latency per arm per phase. Shows C faster than A,
-slightly slower than B in stable/drift.
+**bounded_routing_v1_raw.csv**
+One row per task, arm, and seed from the v1 harness.
 
-`safety_metrics_v1.png`
-Admissibility violations and wrong bypass rate per arm per phase.
-B vs C only (A has zero violations by construction).
-Oscillation phase is the clearest discriminator.
+**bounded_routing_v1_summary.csv**
+Aggregated v1 metrics by arm and workload phase.
 
-`cost_fallback_v1.png`
-Mean structural cost and fallback rate per arm per phase.
-Shows C fallback rising correctly during recovery phase.
+**bounded routing v2 recovery summary.csv**
+Primary v2 recovery results. Records wrong bypasses, wrong-bypass rates, fallback behavior, requalification timing, and final route states.
 
-`oscillation_wrong_bypass_v1.png`
-Wrong bypass count per arm per phase (left panel) and oscillation-phase
-detail with error bars across seeds (right panel). Shows B accumulating
-~12.8 wrong bypasses per seed during oscillation; C accumulates 0.0
-across all seeds. The anti-oscillation gate is the mechanism: C records
-flip observations and blocks execution; B records flips and executes anyway.
+**bounded routing v2 sensitivity summary.csv**
+Sensitivity results for `K=3`, `K=5`, and `K=8`. Shows the tradeoff between faster restoration, fallback cost, and wrong bypass exposure.
 
-`latency_timeseries_v1.png`
-Rolling mean latency over time for seed=42. Phase boundaries
-marked. Shows where each arm diverges.
+## plots/
+
+**latency_by_phase_v1.png**
+Mean and p95 latency by arm and v1 workload phase.
+
+**safety_metrics_v1.png**
+Admissibility violations and wrong-bypass rates by arm and phase.
+
+**cost_fallback_v1.png**
+Structural cost and fallback behavior by arm and phase.
+
+**oscillation_wrong_bypass_v1.png**
+Wrong bypasses by phase and oscillation detail across seeds. Shows the strongest v1 anti-oscillation separation.
+
+**latency_timeseries_v1.png**
+Rolling mean latency for seed 42 with phase boundaries marked.
+
+## Series Status
+
+v1 is the original bounded-routing harness.
+
+v2 adds earned post-recovery route requalification. It shows that stale authority can be removed, qualified routes can regain authority using fresh evidence, and failed routes can remain shut down.
+
+The overall verdict remains partial support because the current workload does not establish a general post-requalification safety advantage under later route degradation.
+
