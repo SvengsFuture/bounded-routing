@@ -1,0 +1,4 @@
+k_requalify,final_ACTIVE,final_REQUALIFYING,final_DEPRECATED,wrong_bypasses,wrong_bypass_rate_pct,bypass_count,fallback_rate_pct,mean_time_to_requalify_ms,std_time_to_requalify_ms,n_route_instances_requalified,eligible_borderline_instance_count,ineligible_borderline_instance_count
+3,35,0,5,126,2.727,4620,38.4,394.3,181.3,35,15,0
+5,35,0,5,126,2.769,4550,39.33,708.6,248.3,35,15,0
+8,35,0,5,126,2.835,4445,40.73,1153.7,309.1,35,15,0

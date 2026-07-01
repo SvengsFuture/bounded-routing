@@ -1,0 +1,9 @@
+view,arch,tasks,bypasses,wrong_bypasses,wbr,exposure_wbr,fallback_rate
+primary,A_FULL_ANALYSIS,2767,0,0,NA,0.0,0.0
+primary,B_NAIVE_CACHE,2767,872,105,12.041,37.947,68.49
+primary,C_TIMER_BOUND,2767,484,123,25.413,44.452,82.51
+primary,D_REQUALIFYING,2767,909,126,13.861,45.537,67.15
+relapse_only,A_FULL_ANALYSIS,2175,0,0,NA,0.0,0.0
+relapse_only,B_NAIVE_CACHE,2175,280,105,37.5,48.276,87.13
+relapse_only,C_TIMER_BOUND,2175,310,123,39.677,56.552,85.75
+relapse_only,D_REQUALIFYING,2175,317,126,39.748,57.931,85.43

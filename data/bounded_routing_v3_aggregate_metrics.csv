@@ -1,0 +1,2 @@
+k_requalify,routes_eligible,routes_ineligible,routes_not_requalified,routes_deprecated_during_recovery,mean_time_to_requalify_ms,std_time_to_requalify_ms,mean_time_first_wrong_bypass_B,mean_time_first_wrong_bypass_C,mean_time_first_wrong_bypass_D,mean_time_confidence_gate_failed_D,mean_time_first_bypass_authority_blocked_D
+5,15,0,0,5,708.6,248.3,86822.7,86822.7,86822.7,88054.7,88054.7

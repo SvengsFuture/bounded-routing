@@ -1,0 +1,5 @@
+arch,k_requalify,n_tasks,wrong_bypasses,wrong_bypass_rate_pct,fallback_rate_pct,total_bypasses
+A_FULL_ANALYSIS,5,7500,0,NA,0.0,0
+B_NAIVE_CACHE,5,7500,105,2.24,37.49,4688
+C_TIMER_BOUND,5,7500,123,3.41,51.91,3607
+D_REQUALIFYING,5,7500,126,2.769,39.33,4550

@@ -1,0 +1,238 @@
+BOUNDED ROUTING V3 — FINAL RUN RECORD
+======================================================================
+
+EXECUTION METADATA
+------------------
+Date and time (UTC) : 2026-07-01 01:28:07
+Script               : bounded routing sim v3.py
+Script SHA-256       : 2e45f4e66326e87ec09e18737c983731cc9f6335d79cc3bee0ad137c05f1b9a7
+Exit code            : 0
+Runtime              : 16.3 s
+
+ENVIRONMENT
+-----------
+Python     : 3.12.3
+NumPy      : 2.4.4
+pandas     : 3.0.2
+matplotlib : 3.10.8
+
+ASSERTION RESULTS
+-----------------
+A1  Shared manifest integrity
+    PASS — candidate_admissible, candidate_latency_ms, candidate_cost
+    verified to match saved manifests for every (seed, time_ms, pattern_id)
+    triplet across all four arms.
+
+A2  No pre-recovery contribution to fresh confidence
+    PASS — every shadow observation timestamp >= recovery_signal_ms for
+    all seeds and K values.
+
+A3  Promotion gate integrity (independent reconstruction)
+    PASS — for all 35 promotions, the K most-recent shadow observations
+    were independently reconstructed from row data, admissibility verified
+    as True for every observation, consecutiveness verified (no inadmissible
+    gap), all timestamps >= recovery signal, and recomputed mean SMS score
+    >= T_BYPASS. Recomputed mean agreed with stored promotion confidence to
+    within 1e-6.
+
+A4  No bypass while REQUALIFYING
+    PASS — 0 rows found where bypassed=True and
+    requalification_state=REQUALIFYING.
+
+A5  Deprecated routes remain deprecated (fail-closed)
+    PASS — all routes entering DEPRECATED during recovery (pattern 0,
+    all 5 seeds) verified to have requalification_state=DEPRECATED,
+    bypassed=False, fallback=True on every subsequent recovery row.
+    DEPRECATED transition tracking extended to cover both the shadow-
+    requalification path and ordinary post-promotion SMS-decay paths.
+
+A6  Pre-recovery DEPRECATED routes not promoted
+    COVERAGE: PRESENT BUT UNEXERCISED across all 15 (seed, K) runs.
+    No route was DEPRECATED at the recovery signal in this workload.
+    The assertion is structurally correct and would fail if any route
+    entered DEPRECATED before the recovery signal fired.
+    Coverage summary: 0/15 runs exercised, 15/15 unexercised.
+
+A7  Matched window key identity
+    PASS — (seed, time_ms, pattern_id) key sets are identical across all
+    four arms in both the primary matched window and the relapse-only view.
+
+A8  Window not conditioned on bypass decision (independent reconstruction)
+    PASS — expected primary keys independently reconstructed from
+    requalified_at_ms, expected relapse keys from first_inadmissible_task_ms,
+    using manifest timestamps only (bypassed/fallback columns explicitly
+    excluded from reconstruction). Produced window key sets verified to equal
+    expected key sets exactly for all four arms in both views.
+
+A9  Terminal state counts match final-row computation (post-hoc against written output)
+    PASS — sensitivity CSV read back from disk; final-row state counts
+    independently recomputed from raw df for K=3, K=5, K=8 and verified
+    to match the counts actually written:
+      K=3: ACTIVE=35 REQUALIFYING=0 DEPRECATED=5
+      K=5: ACTIVE=35 REQUALIFYING=0 DEPRECATED=5
+      K=8: ACTIVE=35 REQUALIFYING=0 DEPRECATED=5
+
+A10 Requalification time calculation (verified per K)
+    PASS — count of values averaged equals count of unique requalified
+    (seed, pattern_id) route instances at K=3 (35), K=5 (35), K=8 (35).
+
+A11 Eligibility timestamp ordering
+    PASS — all 15 eligible route instances satisfy
+    requalified_at_ms < degradation_onset_ms.
+
+A12 Manifest admissibility during recovery phase
+    PASS — borderline relapse patterns (5-7): candidate_admissible=True
+    for all recovery rows with time_ms < degradation_onset_ms.
+    Control patterns (1-4): candidate_admissible=True for all recovery
+    rows across the entire recovery phase.
+
+A13 Verdict branch function pre-execution self-test
+    PASS — select_verdict_branch(0,0) -> EMPTY_COHORT_NOT_SUPPORTED,
+    select_verdict_branch(1,0) -> INCONCLUSIVE,
+    select_verdict_branch(1,1) -> EVALUATE_MAIN_VERDICT.
+    All 3/3 test cases passed before any arm executed.
+
+A14 Pattern 0 never promoted by Arm D
+    PASS — pattern_id 0 does not appear in any seed's promotions list.
+
+A15 Clean-interval shadow SMS floor (including promotion-completing row)
+    PASS — all clean-interval shadow observations (including rows stored
+    as ACTIVE due to promotion completing on that task) verified to have
+    shadow_outcome_score >= T_BYPASS=0.75. Promotion-completing rows
+    within the clean interval explicitly confirmed to be captured.
+
+A16 Manifest coverage before arms run
+    PASS — all (seed, pattern_id) pairs in CONTROL and BORDERLINE_RELAPSE
+    classes have >= max(K_REQUALIFY_SWEEP)=8 clean-interval recovery task
+    observations. Verified before any arm executed.
+
+Required output fields:
+    per-route-instance CSV : PRESENT
+    aggregate metrics CSV  : PRESENT
+    sensitivity CSV        : PRESENT
+
+ALL ASSERTIONS PASSED (A1-A16, including independently-verified
+A3, A5, A8, A9, A10, A15)
+
+VERDICT
+-------
+Verdict pipeline path:
+  Step 0 : select_verdict_branch(15, 105) -> EVALUATE_MAIN_VERDICT
+  Step 1 : total_matched_bypasses_D = 909 (not zero — proceed to Step 2)
+  Step 2 : primary K=5 verdict = NOT SUPPORTED
+           Arm D does not show fewer matched wrong bypasses than both
+           Arm B and Arm C in either the primary matched window or the
+           relapse-only view.
+  Step 3 : not reached (Step 2 was not SUPPORTED)
+
+FINAL VERDICT: NOT SUPPORTED
+Reason     : from Step 2 primary K=5 evaluation
+Controlling specification: docs/validation_plan_v3.md (approved/frozen)
+
+KEY METRICS (K=5 primary run)
+------------------------------
+Eligible borderline instance count         : 15
+  (3 patterns × 5 seeds, all promoted before degradation onset)
+
+Primary matched window wrong bypasses
+  B_NAIVE_CACHE   : 105
+  C_TIMER_BOUND   : 123
+  D_REQUALIFYING  : 126
+
+Relapse-only window wrong bypasses
+  B_NAIVE_CACHE   : 105
+  C_TIMER_BOUND   : 123
+  D_REQUALIFYING  : 126
+
+Total matched bypasses, Arm D              : 909
+
+Final D state counts (from final recovery row per (seed, pattern_id))
+  ACTIVE          : 35
+  REQUALIFYING    : 0
+  DEPRECATED      : 5
+
+First-blocking-gate counts (Arm D, eligible borderline instances)
+  confidence      : 15
+  (all 15 eligible instances had confidence decay as the first gate to
+  block bypass after degradation onset; no depreciation, cost,
+  anti-oscillation, or cooldown gate fired first in any instance)
+
+Most common first-blocking gate            : confidence
+
+SENSITIVITY SWEEP (Arm D, recovery phase)
+-----------------------------------------
+K  | ACTIVE | REQUALIFYING | DEPRECATED | Wrong bp | WBR%  | Fallback%
+---+--------+--------------+------------+----------+-------+----------
+3  |   35   |       0      |     5      |   126    | 2.727 |  38.40
+5  |   35   |       0      |     5      |   126    | 2.769 |  39.33
+8  |   35   |       0      |     5      |   126    | 2.835 |  40.73
+
+Mean requalification time (ms since recovery signal)
+  K=3 : 394.3 ms (std 181.3)
+  K=5 : 708.6 ms (std 248.3)
+  K=8 : 1153.7 ms (std 309.1)
+
+Eligible borderline instance count: 15 at all K values.
+Ineligible borderline instance count: 0 at all K values.
+
+FILE INVENTORY WITH SHA-256
+----------------------------
+bounded routing sim v3.py
+  2e45f4e66326e87ec09e18737c983731cc9f6335d79cc3bee0ad137c05f1b9a7
+
+bounded_routing_v3_run_record.txt
+  4ee109ddab2f52ddc2a95341ba8816b9caf283fcf04f5320046a0bc179d04254
+
+bounded_routing_v3_raw.csv
+  73534fd533c64e73a6c5a07e7e5aacfd4e44b95111415c02cd5b098171a17d97
+
+bounded_routing_v3_summary.csv
+  c90b35afa5ec65311ee9b5149772943ba9a244ab8d4407ebf04f6f8958b00786
+
+bounded_routing_v3_recovery_summary.csv
+  27ba0d03ceb789480f5f3ea3a8081cf24e0abba23cbe23ab746af0c705e5be58
+
+bounded_routing_v3_sensitivity_summary.csv
+  9e7683e17781f8f81aa960aa9d5158ea7c3a05554f9059347831502a47ae05d3
+
+bounded_routing_v3_matched_comparison.csv
+  fab492bfea9ee62ee3887e25459a68ea4978986e1091e399243b048d2f0c185c
+
+bounded_routing_v3_per_route_instance.csv
+  a3b574f6ba3bb411dcf03351b2eff98d6f31059ebe5329ad06281204c755c5f7
+
+bounded_routing_v3_aggregate_metrics.csv
+  54f355d94aea7c665e5b9e33b41ffd4155c5d96d505e6554d907219850bda2a9
+
+manifest_seed42_v3.csv
+  34f666a93ead1503d56fdd0ef7d3505de1570c5b74533fb0f56eedc129f56399
+
+manifest_seed99_v3.csv
+  5a237c4f3dd2656af017b819d922d6900df2ef5b0a9a982d5b99aa76376c4ec0
+
+manifest_seed500_v3.csv
+  65b39d69c75a1d0f3c4529cb515eb95ba305aa0e2eb547363dacd769fe2a26d5
+
+manifest_seed777_v3.csv
+  681d6484ab2daea0a47aa2a5c6cad63f7f6f1a889edade25eed7729d13c435ba
+
+manifest_seed1337_v3.csv
+  9d95a34a4165550d2617cbffb46267b6bd49023e4247bbecb2150f913ee5c2cf
+
+recovery_wrong_bypass_timeseries_v3.png
+  8c5535db2e9c924d01d938e70b07fe9a2db39680f0080e4ee8c7ccdae1a8332d
+
+recovery_fallback_timeseries_v3.png
+  ef80c485f7656a3ea75fdb07261e144c1bd783add255769289d2e89205896ba4
+
+requalification_by_pattern_v3.png
+  d5074ff28948919cc5a7561a5f2c066f1d0305217ff32a904253c60b63f8de7d
+
+post_requalification_matched_v3.png
+  3f366cf154a690bec9a354bb3e29fb88fcfb49f5e0a6c083fd83d24156c3acc9
+
+revocation_timeline_v3.png
+  7e5ca07411533c07226d7af8817e8a794f825499ae6d3db3dda6c63666e29f0b
+
+requalification_sensitivity_v3.png
+  8cf7f9dffa4706682b74757c271787f6c9a95f62eb0f4846fdd11315d60029cd
