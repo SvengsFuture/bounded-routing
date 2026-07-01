@@ -1,120 +1,228 @@
 # Bounded Routing — Core Mechanism
 
-## What this is
+## What This Is
 
-Bounded routing is a route-selection discipline for adaptive systems.
-It governs when a learned route can be used and when a task must fall
-back to full analysis. The constraint is admissibility, not only speed.
+Bounded routing is a route-selection discipline for adaptive systems. It governs when a learned route may bypass full analysis and when the system must fall back.
 
-A route is selected only when all of the following remain inside bounds:
+The governing constraint is admissibility, not speed alone.
 
-- Pattern history depth (minimum observations before a route is trusted)
-- Confidence score above bypass threshold
-- Structural cost within tolerance
-- Recovery context allows bypass (system is not mid-recovery)
-- Anti-oscillation rule not triggered (route has not recently flipped)
-- Route has not been deprecated or retired
+Bounded routing is the authority layer for the tetrahedral recovery architecture. It grants, maintains, and revokes route authority based on route-level evidence and the continuing structural integrity of the substrate beneath it.
 
-If any bound is violated, the task falls back to full analysis.
-The fallback is the correct behavior, not a failure state.
+A route may bypass only while every required condition remains inside declared bounds.
 
----
+Those conditions include sufficient route history, confidence above the bypass threshold, structural cost within tolerance, recovery context that permits bypass, acceptable anti-oscillation state, an admissible depreciation state, and valid structural-integrity evidence from the tetrahedral substrate.
 
-## Components
+If any required condition fails, the task goes through full analysis.
 
-### Pattern Recognition Engine (PRE)
+Fallback is the correct safety behavior. It is not a failure state.
 
-Receives a task or query and produces a Pattern Signature S_pat.
-S_pat is a compact descriptor that identifies which class of task
-this is and what routing history applies to it.
+## Separation of Responsibilities
 
-S_pat is not a hash or cache key. It carries semantic structure:
-task type, context class, structural cost estimate, and
-recovery-sensitivity flag.
+The tetrahedral substrate produces live structural state through the Fact, Logic, and Coherence roles and their coordinator.
 
-### Adaptive Routing Database (ARD)
+The bounded-routing layer governs whether a learned route currently has execution authority.
 
-Stores per-pattern routing state:
+The recovery layer reconstructs the tetrahedral structure when its invariants fail.
+
+These responsibilities must remain separate.
+
+Route confidence cannot substitute for structural integrity.
+
+Structural integrity cannot be inferred from route confidence alone.
+
+Recovery cannot silently restore earlier bypass authority.
+
+## Pattern Recognition Engine
+
+The Pattern Recognition Engine receives a task or query and produces a pattern signature, `S_pat`.
+
+`S_pat` identifies the task and route class and connects the task to the applicable routing record.
+
+It may include task type, route class, and other information required to identify the correct learned pathway.
+
+It must not contain the current tetrahedral structural condition.
+
+It must not be used as a substitute for live structural evidence.
+
+Structural cost may be associated with the candidate route, but live shape integrity remains a separate input to the bypass decision.
+
+## Adaptive Routing Database
+
+The Adaptive Routing Database stores route-level state for each pattern.
 
 | Field | Type | Meaning |
-|-------|------|---------|
-| S_pat | signature | pattern identifier |
-| P_opt | route | current best pathway |
-| C_success | float [0,1] | route confidence score |
-| obs_count | int | number of observations |
-| last_used_ms | timestamp | recency |
-| depreciation_state | enum | ACTIVE / WARNED / DEPRECATED / RETIRED |
-| last_flip_ms | timestamp | last route change (anti-oscillation) |
-| structural_cost | float | cost of this route in structural terms |
+|---|---|---|
+| `S_pat` | signature | Task and route-class identifier |
+| `P_opt` | route | Current learned pathway |
+| `C_success` | float `[0,1]` | Historical route-performance confidence |
+| `obs_count` | integer | Number of qualifying observations |
+| `last_used_ms` | timestamp | Most recent route use |
+| `depreciation_state` | enum | `ACTIVE`, `WARNED`, `DEPRECATED`, or `RETIRED` |
+| `last_flip_ms` | timestamp | Most recent route change |
+| `structural_cost` | float | Current route-level structural cost |
+| `recovery_state` | enum | Current recovery and requalification condition |
+| `authority_state` | enum | Whether bypass authority is active, blocked, or being re-earned |
 
-Routes are deprecated when C_success falls below a depreciation
-threshold for a sustained window. Deprecated routes trigger fallback.
-Retired routes are removed from ARD.
+A deprecated route cannot bypass.
 
-### Success Measurement System (SMS)
+A retired route is removed from active routing.
 
-Updates C_success after each bypass attempt using a weighted combination:
+A route affected by recovery cannot regain authority from pre-recovery confidence alone. It must satisfy the declared requalification process using fresh evidence.
 
-    C_success_new = alpha * C_success_old + (1 - alpha) * outcome_score
+The ARD may reference a structural-integrity observation used by the current decision, but that observation must retain its independent source, timestamp, epoch, and scope. It must not be collapsed into `C_success`.
 
-where outcome_score is derived from:
-- Latency: did the task complete within expected window?
-- Admissibility: did the result satisfy structural constraints?
-- Degradation: was output quality within tolerance?
-- Stability: was this outcome consistent with recent history?
+## Success Measurement System
 
-alpha is a decay factor. SMS is the only component that writes
-C_success. No other component modifies route confidence directly.
+The Success Measurement System updates `C_success` from route-level performance evidence.
 
-### Intelligent Bypass Mechanism (IBM)
+A general update has the form:
 
-Decision logic at task arrival:
+`C_success_new = alpha * C_success_old + (1 - alpha) * outcome_score`
 
- 1. PRE produces S_pat from the task
-2. ARD lookup returns the current route state for S_pat
-3. Check confidence: C_success >= T_bypass
-4. Check depreciation state, structural cost, recovery context, and anti-oscillation status
-5. If all five bypass checks pass: delegate along P_opt
-6. If any check fails: route to full analysis
-7. SMS records the outcome and ARD is updated
+The outcome score may include route latency, route admissibility, degradation, and stability.
 
-T_bypass is a per-system parameter, not hardcoded.
-Higher T_bypass = more conservative bypass. Lower = more aggressive.
+Admissibility carries the highest weight.
 
----
+The Success Measurement System is the only component that changes route confidence directly.
 
-## Why admissibility, not just confidence
+Live tetrahedral structural state does not become part of the moving confidence average.
 
-A naive adaptive cache uses confidence as the only gate.
-When confidence is high, it bypasses. When low, it falls back.
+`C_success` answers a historical question:
 
-This breaks under three conditions:
+How well has this route performed?
 
-1. **Structural cost shift**: A route that was fast may become expensive
-   if the system's load, topology, or context changes. Confidence does
-   not track structural cost directly.
+It does not answer the structural question:
 
-2. **Recovery context**: During or immediately after a system recovery
-   event, previously reliable routes may be invalid. A high-confidence
-   route built on pre-failure observations should not bypass into
-   a changed topology.
+Is the tetrahedral substrate currently intact enough to permit bypass?
 
-3. **Oscillation**: A route that repeatedly flip-flops between two
-   options builds false confidence on each direction. Without
-   anti-oscillation gating, the system learns two contradictory routes
-   and alternates between them at high confidence.
+## Structural-Integrity Record
 
-Bounded routing addresses all three by making admissibility a
-structural gate, not a confidence threshold adjustment.
+The tetrahedral substrate supplies a separate structural-integrity record.
 
----
+A valid structural record must identify:
 
-## What bounded routing does not claim
+- the authorized source
+- the observation timestamp
+- the structural epoch
+- the applicable route or system scope
+- the Fact, Logic, and Coherence evidence or the coordinator-derived result
+- the resulting structural-integrity condition
 
-- It is not the fastest possible routing scheme
-- It does not guarantee zero wrong bypasses
-- It does not replace full analysis — it gates access to the bypass path
-- The 120-degree spacing analogy does not apply here; topology is logical,
-  not angular
+The record may expose a scalar gate result, but the underlying role-separated or geometric evidence must remain available for inspection and replay.
 
-The supported v1 result is narrower: bounded routing reduces latency versus full analysis and prevents oscillation-related wrong bypasses when the anti-oscillation gate is active. Drift separation is modest, recovery shows conservative fallback, and the structural-cost gate is not a strong discriminator in this configuration.
+The record is admissible only when its source is authorized, its timestamp is fresh, its epoch matches the active substrate, and its scope applies to the route being considered.
+
+Missing, stale, unverifiable, epoch-mismatched, or out-of-scope structural evidence cannot preserve bypass authority.
+
+The system must fail closed to full analysis.
+
+## Intelligent Bypass Mechanism
+
+The Intelligent Bypass Mechanism decides whether a learned route may execute.
+
+At task arrival:
+
+1. The Pattern Recognition Engine produces `S_pat`.
+2. The Adaptive Routing Database returns the applicable route record.
+3. The system verifies that route history is sufficient.
+4. The system checks that `C_success` is at or above `T_bypass`.
+5. The system checks the depreciation state.
+6. The system checks route-level structural cost.
+7. The system checks recovery and requalification state.
+8. The system checks anti-oscillation status.
+9. The system checks the current tetrahedral structural-integrity record.
+10. If every required gate passes, the task may execute through `P_opt`.
+11. If any required gate fails, the task goes through full analysis.
+12. The Success Measurement System records the route outcome and updates route confidence where applicable.
+
+`T_bypass` is a system parameter, not a universal constant.
+
+A higher threshold produces more conservative bypass behavior.
+
+A lower threshold produces more aggressive bypass behavior.
+
+No threshold can override a failed structural-integrity gate.
+
+## Recovery and Requalification
+
+A recovery event removes bypass authority from affected routes.
+
+The current task goes through full analysis.
+
+The candidate route may be evaluated in shadow, but that evidence applies only to future authority.
+
+Pre-recovery confidence cannot silently reactivate the route.
+
+The route must earn authority again through fresh post-recovery evidence.
+
+Persistent-failure routes may become deprecated and remain fail-closed.
+
+A route that successfully requalifies may return to active bypass, but its authority remains conditional and revocable.
+
+## Why Confidence Alone Is Not Enough
+
+A naive adaptive cache treats confidence as the primary or only bypass gate.
+
+That fails under several conditions.
+
+A route may retain high historical confidence after the operating structure has changed.
+
+A recovery event may invalidate observations gathered under an earlier topology or epoch.
+
+A route may oscillate between competing pathways while each retains misleading confidence.
+
+A route may requalify correctly and later degrade faster than its moving confidence average can detect.
+
+The v3 simulation exposed this last limit.
+
+In the flat harness, the first blocking gate for every eligible borderline route was the confidence gate. The additional route-level gates did not provide an earlier revocation signal.
+
+This does not invalidate bounded authority or earned requalification.
+
+It shows that route-level scalar evidence is insufficient as the only post-promotion degradation detector.
+
+The tetrahedral structural-integrity gate is intended to test whether live deformation of the substrate can withdraw authority before ordinary confidence decay responds.
+
+## Tetrahedral Relationship
+
+The tetrahedral architecture is not an analogy placed around the router after the fact.
+
+It is the substrate the router was designed to govern.
+
+Fact, Logic, and Coherence occupy distinct structural roles.
+
+The coordinator observes or derives the continuing integrity of that role-separated structure.
+
+Bounded routing uses that structural condition as an independent authority gate.
+
+The router does not reconstruct the tetrahedron.
+
+The recovery layer does not decide route confidence.
+
+The confidence score does not define shape integrity.
+
+The architecture depends on preserving these distinctions.
+
+## What Bounded Routing Does Not Claim
+
+Bounded routing is not claimed to be the fastest possible routing scheme.
+
+It does not guarantee zero wrong bypasses.
+
+It does not replace full analysis.
+
+It does not prove that the selected thresholds are optimal.
+
+It does not establish a general safety advantage across all workloads.
+
+It does not yet prove that tetrahedral deformation provides an earlier revocation signal.
+
+The supported findings are narrower.
+
+V1 supports the anti-oscillation mechanism under the tested oscillation workload.
+
+V2 supports removal of stale authority, earned requalification through fresh evidence, and fail-closed handling of persistent-failure routes.
+
+V3 does not support the stronger claim that the current flat gate stack revokes unsafe post-promotion authority faster than simpler controls.
+
+The next design task is to define and test the tetrahedral structural-integrity record without blending it into route confidence.
