@@ -259,6 +259,34 @@ bounded-routing/
     |-- post_requalification_matched_v3.png
     |-- revocation_timeline_v3.png
     |-- requalification_sensitivity_v3.png
+Running the Simulations
 
-Full analysis remains the safety baseline and the correct fallback whenever bypass authority is not earned.
+Run v1 with:
 
+python scripts/bounded_routing_sim_v1.py
+
+Run v2 with:
+
+python "scripts/bounded routing sim v2.py"
+
+Run v3 with:
+
+python "scripts/bounded routing sim v3.py"
+
+What This Does Not Claim
+
+This project does not claim zero wrong bypasses under every condition.
+
+It does not claim that the selected thresholds are optimal.
+
+It does not claim superiority over every possible adaptive routing system.
+
+It does not establish real-world latency.
+
+It does not prove the correctness of the incoming pattern signature.
+
+It does not prove that every successfully requalified route will remain safe under later degradation.
+
+It does not yet prove that tetrahedral deformation provides an earlier revocation signal.
+
+Full analysis remains the safety baseline and the correct fallback whenever bypass authority is not earned or required structural evidence is absent.
