@@ -1,13 +1,14 @@
-# Bounded Routing — Simulation Verdict
+# Bounded Routing Simulation Verdict
 
-**Series:** v1 initial harness, v2 recovery requalification, and v3 post-authority relapse  
-**Current overall verdict:** PARTIAL SUPPORT
+Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, and Scar Layer V1.
 
-The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, and degrade again after bypass authority has been restored.
+Current overall verdict: PARTIAL SUPPORT.
+
+The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, and fail under live structural conditions.
 
 The results support bounded bypass authority as a useful control mechanism. They do not establish that bounded routing is always safer, always faster, or optimal under every workload.
 
-The series now separates three different findings.
+The series now separates five findings.
 
 V1 tested bounded routing under drift, fault, recovery, and oscillation.
 
@@ -15,181 +16,61 @@ V2 tested whether stale route authority could be removed and earned back through
 
 V3 tested whether the full requalifying gate stack could revoke unsafe authority faster than simpler controls after a restored route degraded again.
 
----
+V4 tested whether an independent tetrahedral shape-integrity gate could revoke unsafe bypass authority earlier than the inherited flat gate under a frozen matched structural-deformation workload.
 
-## v1 — Initial Harness
+Scar Layer V1 tested whether a minimal rejected-configuration registry could write, match, elevate, and retire scars only under declared authority and evidence rules.
+
+## V1 Initial Harness
 
 V1 used three arms across stable, drift, fault, recovery, and oscillation phases.
 
-| Arm | Label | Description |
-|---|---|---|
-| A | A_FULL_ANALYSIS | Every task takes the full analysis path. No bypass. |
-| B | B_NAIVE_CACHE | Bypass occurs when confidence exceeds the threshold. No structural bounds, depreciation, anti-oscillation gate, or recovery blackout. |
-| C | C_BOUNDED_ROUTING | Bypass requires the full ARD, SMS, and IBM gate stack to remain admissible. |
+Arm A was full analysis. Every task took the full analysis path and no bypass was allowed.
 
-### Stable phase
+Arm B was the naive cache. Bypass occurred when confidence exceeded the threshold, without structural bounds, depreciation, anti-oscillation control, or recovery blackout.
 
-All three arms behaved normally. Arms B and C built usable bypass routes. Arm C was more conservative, with approximately 7.5 percent fallback compared with 4.8 percent for Arm B.
+Arm C was bounded routing. Bypass required the full ARD, SMS, and IBM gate stack to remain admissible.
 
-No admissibility violations occurred.
-
-Average latency was approximately 40 milliseconds for Arm A, 9.6 milliseconds for Arm B, and 10.5 milliseconds for Arm C.
-
-### Drift phase
-
-Route quality for pattern 0 degraded gradually from 1.0 to 0.2.
-
-Arm B accumulated 114 admissibility violations. Arm C accumulated 101.
-
-The separation was modest because confidence decay caused both arms to fall back. The structural-cost gate was not a strong discriminator in this configuration.
-
-### Fault phase
-
-Route quality collapsed to 0.1.
-
-Both Arms B and C depleted confidence and returned to full analysis. Neither arm recorded an admissibility violation during this phase.
-
-This phase did not strongly distinguish bounded routing from ordinary confidence decay. The failure was severe enough that both systems recognized it quickly.
-
-### Recovery phase
-
-Arm C used a fixed 5,000 millisecond blackout for recovery-sensitive routes.
-
-Fallback increased to approximately 36.3 percent for Arm C, compared with 7.1 percent for Arm B. This shows that the recovery gate correctly forced more work through full analysis.
-
-Arm B recorded 33 admissibility violations. Arm C recorded 31.
-
-Arm C performed fewer bypasses, but its wrong-bypass rate was not lower. The recovery phase therefore supported conservative fallback behavior, but it did not establish a clean per-bypass safety advantage.
-
-### Oscillation phase
-
-Two competing routes alternated quality every four seconds.
-
-This produced the clearest v1 separation.
-
-Arm B recorded 64 admissibility violations. Arm C recorded zero.
+The clearest V1 separation occurred during route oscillation. Two competing routes alternated quality every four seconds. Arm B recorded 64 admissibility violations. Arm C recorded zero.
 
 The naive cache repeatedly entered the bad route while confidence remained high. The bounded arm blocked bypass during anti-oscillation cooldown periods.
 
-The wrong-bypass rate was approximately 1.1 percent for Arm B and 0 percent for Arm C.
+V1 supports the anti-oscillation mechanism under the tested oscillation workload. It does not prove that bounded routing is always safer than a naive cache. The fixed recovery blackout produced conservative fallback behavior, but it did not show a general recovery safety advantage.
 
-### v1 verdict
-
-| Claim | Result |
-|---|---|
-| Bounded routing reduces violations during route oscillation | SUPPORTED |
-| Bounded routing can be faster than full analysis | SUPPORTED |
-| The anti-oscillation gate prevents repeated wrong bypasses in the oscillation scenario | SUPPORTED |
-| The recovery blackout correctly increases fallback | SUPPORTED |
-| Bounded routing is always safer than a naive cache | NOT SUPPORTED |
-| Bounded routing eliminates all wrong bypasses | NOT CLAIMED AND NOT SHOWN |
-
-V1 validated the anti-oscillation mechanism. The fixed recovery blackout produced conservative behavior, but it did not show a general recovery safety advantage.
-
----
-
-## v2 — Recovery Requalification
+## V2 Recovery Requalification
 
 V2 replaced timer-only restoration with earned route requalification.
 
-A recovery event removes bypass authority. The current task goes through full analysis. The candidate learned route is then evaluated in shadow on that same task.
-
-Shadow evidence applies only to future bypass authority.
+A recovery event removes bypass authority. The current task goes through full analysis. The candidate learned route is then evaluated in shadow on that same task. Shadow evidence applies only to future bypass authority.
 
 A route cannot regain authority using confidence or history from before recovery. It must build fresh post-recovery evidence.
 
 Deprecated routes remain fail-closed.
 
-### v2 arms
+The primary V2 test used K=5. A route had to complete five consecutive admissible shadow checks and reach fresh confidence of at least 0.75 before returning to active bypass.
 
-| Arm | Label | Description |
-|---|---|---|
-| A | A_FULL_ANALYSIS | Every task uses full analysis. |
-| B | B_NAIVE_CACHE | Learned routes resume bypass without recovery-specific requalification. |
-| C | C_TIMER_BOUND | Bypass is blocked for a fixed recovery interval and then restored by time. |
-| D | D_REQUALIFYING | Bypass authority is removed and must be earned again through fresh shadow evidence. |
+The primary V2 result was:
 
-### Requalification rule
+B_NAIVE_CACHE wrong bypasses: 35.
 
-The primary v2 test used K=5.
+C_TIMER_BOUND wrong bypasses: 33.
 
-A route had to complete five consecutive admissible shadow checks and reach fresh confidence of at least 0.75 before returning to active bypass.
+D_REQUALIFYING wrong bypasses: 0.
 
-A failed shadow check reset the consecutive count and reduced fresh confidence.
+B_NAIVE_CACHE fallback rate: approximately 7.4 percent.
 
-Sustained fresh confidence below 0.55 could move a route into the deprecated state.
+C_TIMER_BOUND fallback rate: approximately 36.3 percent.
 
-### Primary v2 results
+D_REQUALIFYING fallback rate: approximately 17.23 percent.
 
-| Arm | Wrong bypasses | Wrong-bypass rate | Fallback rate |
-|---|---:|---:|---:|
-| B_NAIVE_CACHE | 35 | approximately 1.01% | approximately 7.4% |
-| C_TIMER_BOUND | 33 | approximately 1.38% | approximately 36.3% |
-| D_REQUALIFYING | 0 | 0% | approximately 17.23% |
-
-Arm D eliminated wrong bypasses during the measured v2 recovery workload.
-
-It did not remain permanently locked in fallback. Thirty-five route instances earned bypass authority back.
-
-Five route instances remained deprecated.
-
-| State | Route instances |
-|---|---:|
-| ACTIVE | 35 |
-| REQUALIFYING | 0 |
-| DEPRECATED | 5 |
+Arm D eliminated wrong bypasses during the measured V2 recovery workload. It did not remain permanently locked in fallback. Thirty-five route instances earned bypass authority back. Five route instances remained deprecated.
 
 The mean time required to requalify an eligible route was approximately 816 milliseconds.
 
-Patterns 1 through 7 successfully requalified across the five seeds. Pattern 0 failed the fresh checks, became deprecated, and remained fail-closed.
+The V2 sensitivity test showed the expected tradeoff. K=3 restored bypass sooner and lowered fallback, but allowed 15 wrong bypasses. K=5 and K=8 produced zero wrong bypasses in the V2 workload, but increased fallback and delayed restoration.
 
-### Sensitivity results
+V2 supports stale-authority removal, earned restoration through fresh evidence, and fail-closed handling of persistent-failure routes. It does not prove that the selected thresholds are optimal.
 
-The requalification requirement was also tested at K=3, K=5, and K=8.
-
-| K | Active | Requalifying | Deprecated | Wrong bypasses | Wrong-bypass rate | Bypasses | Fallback rate |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 3 | 37 | 0 | 3 | 15 | approximately 0.462% | 3246 | approximately 13.44% |
-| 5 | 35 | 0 | 5 | 0 | 0% | 3104 | approximately 17.23% |
-| 8 | 35 | 0 | 5 | 0 | 0% | 2999 | approximately 20.03% |
-
-The sensitivity test showed the expected tradeoff.
-
-A smaller evidence requirement restored bypass sooner and lowered fallback, but allowed wrong bypasses.
-
-Larger evidence requirements were safer in the v2 workload, but increased fallback and delayed route restoration.
-
-### v2 verdict
-
-| Claim | Result |
-|---|---|
-| Recovery removes stale bypass authority | SUPPORTED |
-| Pre-recovery confidence cannot silently restore authority | SUPPORTED |
-| Eligible routes can earn authority back using fresh evidence | SUPPORTED |
-| Failed routes can remain fail-closed | SUPPORTED |
-| The requalifying arm eliminated wrong bypasses in the primary v2 recovery workload | SUPPORTED |
-| The requalifying arm remained permanently stuck in fallback | NOT SUPPORTED |
-| K=5 and K=8 were safer than K=3 in the v2 workload | SUPPORTED |
-| Requalified routes were proven safer than the same routes under every competing arm | INCONCLUSIVE |
-| The selected thresholds are optimal | NOT SHOWN |
-
-### Why the v2 matched comparison was inconclusive
-
-The successfully requalified patterns were patterns 1 through 7.
-
-Those routes had perfect route quality during the modeled recovery phase. Once they requalified, they were not exposed to a condition that could produce a wrong bypass.
-
-Pattern 0 was the failing route, but it did not requalify.
-
-The matched post-requalification cohort therefore could not distinguish the arms. The routes that came back were clean, and the route that could have failed stayed shut down.
-
-This did not invalidate the requalification mechanism. It limited the strength of the claim that could be made from the v2 workload.
-
-V3 was created to address that limitation.
-
----
-
-## v3 — Post-Authority Relapse
+## V3 Post-Authority Relapse
 
 V3 introduced three borderline relapse patterns that could requalify cleanly and then degrade after authority was restored.
 
@@ -197,122 +78,131 @@ The degradation schedule was generated in shared deterministic manifests before 
 
 The primary question was whether Arm D's full gate stack revoked unsafe post-promotion bypass authority faster than the simpler Arms B and C.
 
-### Matched cohort
-
 All 15 borderline route instances, consisting of patterns 5, 6, and 7 across five seeds, requalified before their degradation onset.
 
-The primary matched window began after each route's Arm D promotion timestamp and continued through the end of recovery.
+The primary matched result was:
 
-The relapse-only view began at the first inadmissible manifest task for each eligible route instance.
+B_NAIVE_CACHE wrong bypasses: 105.
 
-Both windows used identical task keys across all four arms and were constructed without using any arm's bypass or fallback decisions.
+C_TIMER_BOUND wrong bypasses: 123.
 
-### Primary matched results
+D_REQUALIFYING wrong bypasses: 126.
 
-| Arm | Wrong bypasses | Actual wrong-bypass rate | Exposure-normalized rate |
-|---|---:|---:|---:|
-| B_NAIVE_CACHE | 105 | 12.04% | 37.95 per 1,000 tasks |
-| C_TIMER_BOUND | 123 | 25.41% | 44.45 per 1,000 tasks |
-| D_REQUALIFYING | 126 | 13.86% | 45.54 per 1,000 tasks |
+B_NAIVE_CACHE actual wrong-bypass rate: 12.04 percent.
+
+C_TIMER_BOUND actual wrong-bypass rate: 25.41 percent.
+
+D_REQUALIFYING actual wrong-bypass rate: 13.86 percent.
 
 Arm D executed 909 matched bypasses. Its result was therefore not caused by permanent suppression or avoidance of exposure.
 
-Arm D did not record fewer wrong bypasses than both comparison arms. It recorded 126, compared with 105 for Arm B and 123 for Arm C.
+Arm D did not record fewer wrong bypasses than both comparison arms.
 
-### Relapse-only results
+For all 15 eligible borderline route instances, the first Arm D gate to block bypass after degradation onset was the confidence gate. Depreciation, structural cost, anti-oscillation, and cooldown did not fire first in any eligible instance.
 
-| Arm | Wrong bypasses | Actual wrong-bypass rate | Exposure-normalized rate |
-|---|---:|---:|---:|
-| B_NAIVE_CACHE | 105 | 37.50% | 48.28 per 1,000 tasks |
-| C_TIMER_BOUND | 123 | 39.68% | 56.55 per 1,000 tasks |
-| D_REQUALIFYING | 126 | 39.75% | 57.93 per 1,000 tasks |
+The extra Arm D gates were present and operational, but they did not provide an earlier revocation signal in this workload. The router relied on ordinary confidence decay.
 
-The wrong-bypass counts were unchanged in the relapse-only view because all wrong bypasses occurred after degradation had begun.
+V3 does not support the stronger claim that the flat Arm D gate stack revokes unsafe post-promotion authority faster than simpler comparison arms. It does not invalidate earned requalification, fail-closed deprecation, or the V1 anti-oscillation result.
 
-Arm D again did not outperform both comparison arms.
+V3 identified the need for an independent structural signal.
 
-### Gate observations
+## V4 Shape-Integrity Gate
 
-For all 15 eligible borderline route instances, the first Arm D gate to block bypass after degradation onset was the confidence gate.
+V4 tested the mechanism that V3 left unresolved.
 
-Depreciation, structural cost, anti-oscillation, and cooldown did not fire first in any eligible instance.
+V3 showed that route-level scalar confidence was too slow to serve as the only post-promotion degradation detector. V4 added an independent tetrahedral structural signal as a conjunctive authority gate.
 
-The extra Arm D gates were present and operational, but they did not provide an earlier revocation signal in this workload.
+The V4 shape gate did not replace C_success. It did not blend structural state into route confidence. It did not repair or reinterpret the route score.
 
-The router therefore relied on ordinary confidence decay, governed by the same ALPHA value and threshold used by the simpler comparison mechanisms.
+It acted as a separate authority condition. A learned route could bypass only when both the ordinary route gates and the independent shape-integrity gate were admissible.
 
-### v3 sensitivity results
+The V4 comparison was:
 
-| K | Active | Requalifying | Deprecated | Wrong bypasses | Wrong-bypass rate | Fallback rate |
-|---:|---:|---:|---:|---:|---:|---:|
-| 3 | 35 | 0 | 5 | 126 | 2.73% | 38.4% |
-| 5 | 35 | 0 | 5 | 126 | 2.77% | 39.3% |
-| 8 | 35 | 0 | 5 | 126 | 2.84% | 40.7% |
+V4-C: flat bounded routing without the shape-integrity gate.
 
-All 15 borderline instances were eligible at K=3, K=5, and K=8.
+V4-D: bounded routing with independent tetrahedral shape-integrity gate.
 
-Mean requalification time increased from approximately 394 milliseconds at K=3, to 709 milliseconds at K=5, to 1,154 milliseconds at K=8.
+The primary comparison changed only one authority variable: whether the independent shape-integrity gate was consumed.
 
-Fallback increased from 38.4 percent to 40.7 percent.
+The primary V4 result was:
 
-Wrong bypasses remained fixed at 126.
+Final verdict: SUPPORTED.
 
-Increasing the evidence requirement delayed restoration and increased fallback cost, but did not improve post-promotion relapse safety.
+Assertions: 26 of 26 passed.
 
-### v3 assertion coverage
+Eligible matched instances: 105.
 
-Assertions A1 through A16 passed.
+V4-C matched wrong bypasses: 404.
 
-The run verified shared-manifest integrity, post-recovery evidence isolation, independent promotion reconstruction, no bypass while requalifying, fail-closed deprecation behavior, matched key identity, matched-window independence, final-state accounting, requalification timing, eligibility ordering, admissibility construction, verdict-branch behavior, pattern 0 non-promotion, clean-interval SMS floors, and manifest coverage.
+V4-D matched wrong bypasses: 14.
 
-A6 was present but unexercised because no route was already deprecated at the moment the recovery signal fired.
+Wrong-bypass reduction: 96.53 percent.
 
-### v3 verdict
+Earlier revocation fraction: 100 percent.
 
-| Claim | Result |
-|---|---|
-| Earned requalification remains structurally correct | SUPPORTED |
-| Persistent-failure routes remain fail-closed | SUPPORTED |
-| Eligible routes regain authority using fresh evidence | SUPPORTED |
-| Arm D performs real post-promotion bypasses | SUPPORTED |
-| Arm D revokes unsafe post-promotion authority faster than both simpler comparison arms | NOT SUPPORTED |
-| Increasing K improves post-promotion relapse safety | NOT SUPPORTED |
-| The extra gate stack acted before confidence decay | NOT SUPPORTED |
-| The selected v3 thresholds are optimal | NOT SHOWN |
+Median revocation lead: 1860 milliseconds.
 
-The pre-declared v3 verdict was NOT SUPPORTED.
+Clean suppression check: passed.
 
-That verdict applies specifically to the stronger claim that Arm D's full gate stack provides an earlier post-promotion revocation advantage under the v3 relapse workload.
+This result supports the narrow claim that live structural evidence can revoke unsafe bypass authority earlier than the inherited flat route gate under the frozen matched structural-deformation workload.
 
-It does not invalidate earned requalification, fail-closed deprecation, or the anti-oscillation result from v1.
+It also supports the separation of route confidence and structural condition.
 
----
+V4 does not prove the complete tetrahedral architecture. It does not prove production reliability. It does not prove threshold optimality. It does not prove route-specific deployment scope.
+
+V4 changes the architecture boundary after V3. The unresolved issue is no longer whether an independent structural signal can be tested at all. Under the frozen V4 workload, it can. The remaining questions are scope, threshold selection, production instrumentation, route-specific applicability, and integration with downstream recovery behavior.
+
+## Scar Layer V1 Rejected Configuration Registry
+
+The scar layer was added after the shape-gate work.
+
+A scar is a compact rejected-configuration record. It says that a structural configuration had authority, later failed under valid evidence, and should not be promoted again as-is.
+
+The governing rule is simple:
+
+Only betrayed authority creates a scar.
+
+The scar layer does not diagnose why a configuration failed. It is not semantic memory. It is not a full history. It is not cellular shedding. It is not lineage inheritance. It is not prospective filtering. It is not fuzzy matching. It is not an extra-proof protocol.
+
+The frozen scar validation tested geometry-only fingerprinting, write boundary, cheap failure exclusion, non-admitted candidate exclusion, invalid evidence exclusion, hard scar behavior, soft scar behavior, restoration scar behavior, failure-count increment rules, elevation threshold, retirement rule, and isolation from shape_integrity and C_success.
+
+The declared constants were:
+
+K_SOFT_PERSIST equals 3.
+
+T_SCAR_ELEVATE equals 3.
+
+T_SCAR_RETIRE_SUCCESS_CYCLES equals 5.
+
+The primary scar result was:
+
+Final verdict: SUPPORTED.
+
+Assertions: 30 of 30 passed.
+
+Runtime: 0.98 seconds.
+
+stderr: empty.
+
+The scar layer validated that scars can be written only for betrayed authority, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
+
+The scar result supports a narrow registry primitive. It does not yet define how damaged structure is cut away, how new structure is grown back, or how a regenerated cell inherits a compact rejected-configuration list.
 
 ## Tetrahedral Architecture Boundary
 
-V3 tested the router in a flat harness.
+The architecture now separates five responsibilities.
 
-No live Fact, Logic, or Coherence signals participated in the bypass decision. No tetrahedral coordinator produced a structural integrity observation. Route quality was encoded directly in the manifest, and the router was required to infer degradation through route-level scalar evidence.
+S_pat identifies the task and route class.
 
-The v3 result therefore does not test whether deformation of the tetrahedral substrate can provide an earlier revocation signal.
+C_success records historical route performance.
 
-The project-level architecture principle is now:
+shape_integrity represents the current authorized structural condition of the tetrahedral substrate.
 
-**Bounded routing is the authority layer for the tetrahedral recovery architecture. It grants, maintains, and revokes route authority based on route-level evidence and the continuing structural integrity of the tetrahedral substrate beneath it.**
+The shape gate consumes live structural state as an independent bypass-authority condition.
 
-The tetrahedral layer produces role-separated structural state.
+The scar layer records rejected structural configurations after betrayed authority.
 
-The routing layer governs bypass authority.
-
-The recovery layer reconstructs the structure when its invariants fail.
-
-The router must preserve the distinction among task identity, historical route performance, and current structural condition.
-
-`S_pat` identifies the task and route class.
-
-`C_success` records historical route performance.
-
-`shape_integrity` represents the current authorized structural condition of the tetrahedral substrate.
+The router must preserve the distinction among task identity, historical route performance, current structural condition, and rejected-configuration memory.
 
 Structural state must come from the tetrahedral coordinator or another authorized structural observer. It must carry source, timestamp, epoch, and applicable scope.
 
@@ -320,9 +210,7 @@ Missing, stale, unverifiable, epoch-mismatched, or inapplicable structural state
 
 Structural condition must remain an independent gate and must not be blended into the SMS moving average.
 
-The v3 NOT SUPPORTED verdict remains unchanged. Future tetrahedral routing work will test a different mechanism: whether live role-separated or coordinator-derived structural deformation can revoke route authority before ordinary confidence decay detects the problem.
-
----
+Scar matching must remain a separate registry operation and must not mutate shape_integrity or C_success.
 
 ## Overall Series Verdict
 
@@ -332,17 +220,15 @@ V1 supports anti-oscillation control under the tested oscillation workload.
 
 V2 supports removal of stale authority, earned requalification through fresh shadow evidence, and fail-closed handling of persistent-failure routes.
 
-V3 does not support the stronger claim that the current flat Arm D gate stack revokes unsafe post-promotion authority faster than simpler controls.
+V3 does not support the stronger claim that the flat Arm D gate stack revokes unsafe post-promotion authority faster than simpler controls.
+
+V4 supports the narrow claim that an independent tetrahedral shape-integrity gate can revoke unsafe bypass authority earlier than the inherited flat gate under the frozen matched structural-deformation workload.
+
+Scar Layer V1 supports the narrow claim that a rejected-configuration scar registry can write, match, elevate, and retire scars under declared authority and evidence rules.
 
 The series supports bounded authority around learned routing, but not a general claim of superior safety across all workloads.
 
-The strongest architectural result is that bypass authority can be treated as temporary, conditional, and revocable rather than as a permanent consequence of earlier confidence.
-
-The clearest current limitation is that route-level scalar confidence is too slow to serve as the sole post-promotion degradation detector.
-
-The next design problem is not stricter initial requalification. It is defining a live tetrahedral deformation signal that remains independent of route confidence and can participate directly in the bypass decision.
-
----
+The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, and capable of leaving behind compact rejected-configuration records after betrayed authority.
 
 ## What the Simulation Series Does Not Prove
 
@@ -358,11 +244,23 @@ It does not prove that every successfully requalified route will remain safe und
 
 It does not establish a general safety advantage across all workloads.
 
-It does not yet prove that tetrahedral deformation provides an earlier revocation signal.
+It does not prove production reliability.
 
-It does not yet define or validate a shape-integrity formula, threshold, freshness interval, route scope, or coordinator schema.
+It does not prove the complete tetrahedral architecture.
 
----
+It does not prove that GLOBAL scope is the correct deployment scope.
+
+It does not prove cellular shedding.
+
+It does not prove lineage inheritance.
+
+It does not prove prospective filtering.
+
+It does not prove fuzzy scar matching.
+
+It does not prove extra-proof recovery behavior.
+
+It does not prove that the system knows why a structural configuration failed.
 
 ## Series Status
 
@@ -372,8 +270,14 @@ V2 is preserved as the first recovery requalification test.
 
 V3 is preserved as the matched post-authority relapse test.
 
-The v3 script, manifests, data, plots, assertions, final run record, and result document form the current executable checkpoint.
+V4 is preserved as the independent shape-integrity gate test.
 
-The tetrahedral routing principle records the architectural boundary for future work.
+Scar Layer V1 is preserved as the rejected-configuration registry test.
 
-The next step is an architecture-level definition of candidate tetrahedral deformation measures before any v4 simulation is written.
+The current executable scar checkpoint is scripts/rejected_configuration_scar_sim_v1_REVIEWED.py.
+
+The current frozen scar result record is docs/REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md.
+
+The next architectural work is cellular shedding, followed by lineage inheritance.
+
+
