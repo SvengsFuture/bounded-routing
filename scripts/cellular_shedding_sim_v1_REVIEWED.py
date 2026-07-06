@@ -33,7 +33,7 @@ import sys
 import time
 
 
-SCRIPT_NAME = "cellular_shedding_sim_v1_REVIEWED_NAMEFIX.py"
+SCRIPT_NAME = "cellular_shedding_sim_v1_REVIEWED.py"
 
 SPEC_PATH = Path("docs/CELLULAR_SHEDDING_SPEC_v1_FROZEN.md")
 PLAN_PATH = Path("docs/CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md")
@@ -954,3 +954,4 @@ Output inventory:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
