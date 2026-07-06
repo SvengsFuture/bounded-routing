@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Cellular Shedding Simulation v1 REVIEWED
@@ -34,7 +33,7 @@ import sys
 import time
 
 
-SCRIPT_NAME = "cellular_shedding_sim_v1.py"
+SCRIPT_NAME = "cellular_shedding_sim_v1_REVIEWED_NAMEFIX.py"
 
 SPEC_PATH = Path("docs/CELLULAR_SHEDDING_SPEC_v1_FROZEN.md")
 PLAN_PATH = Path("docs/CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md")
