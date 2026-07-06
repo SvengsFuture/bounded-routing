@@ -1,5 +1,6 @@
-Bounded Routing
-What This Is
+# Bounded Routing
+
+## What This Is
 
 Bounded routing is a route-selection discipline for adaptive systems. It governs when a learned route may bypass full analysis and when the system must fall back.
 
@@ -11,13 +12,13 @@ This repository now records bounded routing as the authority layer for the tetra
 
 Those responsibilities remain separate.
 
-C_success records historical route performance.
+`C_success` records historical route performance.
 
-shape_integrity represents the current authorized structural condition of the tetrahedral substrate.
+`shape_integrity` represents the current authorized structural condition of the tetrahedral substrate.
 
 A scar records that an authorized structural configuration failed and should not be promoted again as-is.
 
-Current Status
+## Current Status
 
 The simulation series now has three main conclusions.
 
@@ -31,16 +32,18 @@ V4 adds an independent tetrahedral shape-integrity gate and supports the narrow 
 
 The scar layer adds a minimal rejected-configuration memory primitive. It supports the narrow claim that scars can be written only for betrayed authority, ignored for cheap or invalid failures, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
 
-V4 Shape Gate Result
+## V4 Shape Gate Result
 
 The V4 experiment compared:
 
+```text
 V4-C: flat bounded routing without shape-integrity gate
 V4-D: bounded routing with independent tetrahedral shape-integrity gate
+```
 
-The shape gate did not replace C_success.
+The shape gate did not replace `C_success`.
 
-It did not blend with C_success.
+It did not blend with `C_success`.
 
 It did not repair route confidence.
 
@@ -48,6 +51,7 @@ It acted as an independent conjunctive authority condition. A route could bypass
 
 The frozen V4 result was:
 
+```text
 Final verdict:                 SUPPORTED
 Assertions:                    26/26 passed
 Eligible matched instances:     105
@@ -57,21 +61,27 @@ Wrong-bypass reduction:         96.53%
 Earlier revocation fraction:    100%
 Median revocation lead:         1860 ms
 Clean suppression check:        passed
+```
 
 This result supports only the declared synthetic mechanism. It does not prove production reliability, threshold optimality, route-specific scope, or the complete tetrahedral architecture.
 
 See:
 
+```text
 docs/TETRAHEDRAL_SHAPE_INTEGRITY_SPEC_v1_1.md
 docs/TETRAHEDRAL_SHAPE_INTEGRITY_VALIDATION_PLAN_v1.md
 docs/V4_SHAPE_GATE_VERDICT.md
-Scar Layer V1 Result
+```
+
+## Scar Layer V1 Result
 
 The rejected-configuration scar layer tests a narrow structural memory primitive.
 
 The governing rule is:
 
+```text
 Only betrayed authority creates a scar.
+```
 
 A cheap retry does not create a scar.
 
@@ -87,13 +97,16 @@ The scar does not explain why the configuration failed. It is not a diagnostic m
 
 The frozen scar result was:
 
+```text
 Final verdict:    SUPPORTED
 Assertions:       30/30 passed
 Runtime:          0.98 s
 stderr:           empty
+```
 
 The scar layer validated:
 
+```text
 geometry-only fingerprinting
 no failed_invariant_class in the hash payload
 no scars for cheap or non-admitted failures
@@ -104,27 +117,34 @@ failure_count incrementing only after repeated trusted failure
 elevation only at T_SCAR_ELEVATE = 3
 retirement only after T_SCAR_RETIRE_SUCCESS_CYCLES = 5
 isolation from shape_integrity and C_success
+```
 
 This result does not validate cellular shedding, lineage inheritance, prospective filtering, fuzzy scar matching, or an extra-proof protocol.
 
 See:
 
+```text
 docs/REJECTED_CONFIGURATION_SCAR_SPEC_v1_REVISED.md
 docs/REJECTED_CONFIGURATION_SCAR_VALIDATION_PLAN_v1_FROZEN.md
 docs/REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
-Simulation Series
-V1 Initial Harness
+```
+
+## Simulation Series
+
+### V1 Initial Harness
 
 V1 compared full analysis, naive confidence-based bypass, and bounded routing with the full gate stack across stable, drift, fault, recovery, and oscillation phases.
 
 The clearest V1 result occurred during route oscillation.
 
+```text
 Naive confidence cache wrong bypasses: 64
 Bounded routing wrong bypasses:       0
+```
 
 V1 supports the anti-oscillation gate under the tested workload.
 
-V2 Recovery Requalification
+### V2 Recovery Requalification
 
 V2 replaced timer-only restoration with earned route requalification.
 
@@ -136,15 +156,17 @@ The primary V2 test required five consecutive admissible shadow checks and fresh
 
 The requalifying arm produced zero wrong bypasses in the primary recovery test while allowing eligible routes to earn authority back.
 
-V3 Post-Authority Relapse
+### V3 Post-Authority Relapse
 
 V3 created the harder matched workload identified after V2. Borderline routes were allowed to requalify and then degrade after bypass authority had been restored.
 
 The primary V3 matched results were:
 
+```text
 Naive cache wrong bypasses:          105
 Timer-bound recovery wrong bypasses: 123
 Requalifying recovery wrong bypasses: 126
+```
 
 V3 did not support the stronger claim that the flat bounded-routing gate stack revoked unsafe post-promotion authority faster than the comparison arms.
 
@@ -152,23 +174,25 @@ The first blocking gate was the confidence gate in all eligible borderline route
 
 V3 identified the need for an independent structural signal.
 
-V4 Shape Integrity
+### V4 Shape Integrity
 
 V4 tested that independent structural signal.
 
 V4-D added the tetrahedral shape-integrity gate to the inherited flat bounded-routing mechanism. Under the frozen V4 plan, the direct comparison changed only one authority variable: whether the independent shape gate was consumed.
 
-The V4 result was SUPPORTED.
+The V4 result was `SUPPORTED`.
 
-Scar Layer V1
+### Scar Layer V1
 
 The scar layer sits after the shape-gate work. It defines what kind of compact structural record is left when an authorized configuration fails.
 
-The scar result was SUPPORTED.
+The scar result was `SUPPORTED`.
 
 The scar layer is intentionally narrow. It is a rejected-configuration registry, not a general memory system.
 
-Repository Structure
+## Repository Structure
+
+```text
 bounded-routing/
 |-- README.md
 |-- ROUTING_VERDICT.md
@@ -228,27 +252,37 @@ bounded-routing/
 |   |-- scar_v1_write_boundary.png
 |   |-- scar_v1_match_behavior.png
 |   |-- scar_v1_elevation_retirement.png
-Running the Simulations
+```
+
+## Running the Simulations
 
 Run V1 with:
 
+```bash
 python scripts/bounded_routing_sim_v1.py
+```
 
 Run V2 with:
 
+```bash
 python "scripts/bounded routing sim v2.py"
+```
 
 Run V3 with:
 
+```bash
 python "scripts/bounded routing sim v3.py"
+```
 
 Run the scar validation with:
 
+```bash
 python scripts/rejected_configuration_scar_sim_v1_REVIEWED.py
+```
 
 The V4 shape-gate result is recorded in the V4 docs listed above.
 
-What This Does Not Claim
+## What This Does Not Claim
 
 This project does not claim zero wrong bypasses under every condition.
 
@@ -268,7 +302,7 @@ It does not prove that the system knows why a structural configuration failed.
 
 Full analysis remains the safety baseline and the correct fallback whenever bypass authority is not earned or required structural evidence is absent.
 
-Next Architectural Work
+## Next Architectural Work
 
 The next layer is cellular shedding.
 
@@ -277,3 +311,5 @@ The scar layer defines what record is left behind when an authorized structural 
 Shedding must define how a damaged cell is cut away, how its authority is removed, and how adjacent healthy structure carries the load.
 
 Lineage comes after shedding. It must define how a regenerated cell inherits a compact rejected-configuration list without inheriting the full history.
+
+
