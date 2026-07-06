@@ -1,0 +1,31 @@
+assertion_id,passed,description,detail
+A1,True,F0 near-identical float drift produces identical fingerprints,fp_a=e0280314b618851d  fp_b=e0280314b618851d
+A2,True,F1 geometry beyond the quantization boundary produces different fingerprints,fp_a=e0280314b618851d  fp_c=c016e0df4cc8d710
+A3,True,F2 same geometry with different failed_invariant_class produces identical fingerprints,
+A4,True,F3 missing required geometry produces no fingerprint and no scar,returned: None
+A5,True,A0 non-admitted candidate writes no scar,
+A6,True,A1 cheap retry failure writes no scar,
+A7,True,A2 evidence invalidity writes no scar,
+A8,True,A3 authorized-but-no-completed-operation writes no scar,
+A9,True,A4 completed trusted operation establishes scar eligibility,
+A10,True,S0 exactly K_SOFT_PERSIST-1=2 raw soft warnings then clean writes no scar,classification at soft_count=2: TRANSIENT_SOFT_WARNING
+A11,True,S1 authorized hard structural failure writes one scar with REJECT_AS_IS,response=REJECT_AS_IS count=1
+A12,True,S2 authorized gate-effective soft degradation writes one scar with REQUIRE_EXTRA_PROOF,response=REQUIRE_EXTRA_PROOF count=1
+A13,True,S3 authorized restoration failure writes one scar with REQUIRE_EXTRA_PROOF,response=REQUIRE_EXTRA_PROOF count=1
+A14,True,M0 hard scar match rejects the same configuration as-is,response=REJECT_AS_IS
+A15,True,M1 soft scar match requires extra proof and does not hard-reject by default,response=REQUIRE_EXTRA_PROOF
+A16,True,M2 similar but non-identical geometry beyond quantization boundary does not match,fp_different=c016e0df4cc8d710  lookup=None
+A17,True,M3 same geometry with different failed_invariant_class matches the same scar,matched scar: AUTHORIZED_HARD_STRUCTURAL_FAILURE
+A18,True,C0 repeated trusted failure increments failure_count,pre=1 post=2
+A19,True,C1 repeated cheap rejected nominations do not increment failure_count,pre=2 post=2 nom_pressure=10
+A20,True,E0 elevation does not fire below T_SCAR_ELEVATE=3,count=2 elevation=NOT_ELEVATED
+A21,True,E1 elevation fires when failure_count reaches T_SCAR_ELEVATE=3,count=3 state=ELEVATED
+A22,True,E1 elevation event contains no semantic explanation field,leaked: set()
+A23,True,R0 idle time alone does not retire an active scar,retired=False cycles=0
+A24,True,R1 successful cycles retire scar at T_SCAR_RETIRE_SUCCESS_CYCLES=5,cycles=5 retired=True
+A25,True,R2 new trusted failure resets successful_cycles_since_last_seen to zero,cycles=0 count=2
+A26,True,The scar registry is not readable by the structural observer,no_registry_param=True no_registry_attr=True isolation=True
+A27,True,The scar registry does not alter live shape_integrity classification,before=ADMISSIBLE after=ADMISSIBLE
+A28,True,The scar registry does not update C_success,Verified by absence of c_success field in ScarRegistry
+A29,True,"No task text, route history, route outcome, wrong-bypass label, or semantic category enters the fingerprint payload",leaked fields: set()
+A30,True,"Every scar written has valid structural evidence, available fingerprint, and completed prior authority",invalid records: []

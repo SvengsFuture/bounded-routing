@@ -1,0 +1,66 @@
+REJECTED CONFIGURATION SCAR SIMULATION V1 — RUN RECORD
+============================================================
+run_start_timestamp:      2026-07-05T14:08:13.128146+00:00
+run_completion_timestamp: 2026-07-05T14:08:14.107467+00:00
+script_sha256:            eb69c2d5bb885eb327f098a7aba454f09dbe73bde032abf0453d161c2cb0d11c
+validation_plan_sha256:   bc85989023352f37ceb77a92bd611f50ce5b5bb647ae3ac1d2a5705cfa1ed186
+scar_spec_sha256:         028eea341c56a6d6118c7d3738bc0eaa00acfb0318ff5003558decec377aa8a9
+python_version:           3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]
+platform:                 Linux-4.4.0-x86_64-with-glibc2.41
+hashlib_algorithm:        sha256
+hashlib_provider:         sha256
+openssl_version:          OpenSSL 3.5.5 27 Jan 2026
+numpy_version:            2.3.5
+pandas_version:           2.2.3
+matplotlib_version:       3.10.8
+
+PARAMETER BLOCK
+  K_SOFT_PERSIST               = 3
+  T_SCAR_ELEVATE               = 3
+  T_SCAR_RETIRE_SUCCESS_CYCLES = 5
+  FINGERPRINT_METHOD           = GEOMETRY_ONLY_SHA256
+  FINGERPRINT_VERSION          = scar-fp-v1-geom-only
+  MATCH_POLICY                 = EXACT_CANONICAL_FINGERPRINT
+  ANGLE_QUANTUM                = 0.01
+  WEIGHT_QUANTUM               = 0.0001
+  COVERAGE_QUANTUM             = 0.0001
+  COORD_QUANTUM                = 0.0001
+
+SCENARIOS
+  F0 F1 F2 F3 A0 A1 A2 A3 A4 S0 S1 S2 S3 M0 M1 M2 M3 C0 C1 E0 E1 R0 R1 R2
+
+ASSERTIONS
+  [PASS] A1   F0 near-identical float drift produces identical fingerprints
+  [PASS] A2   F1 geometry beyond the quantization boundary produces different fingerprints
+  [PASS] A3   F2 same geometry with different failed_invariant_class produces identical fingerprints
+  [PASS] A4   F3 missing required geometry produces no fingerprint and no scar
+  [PASS] A5   A0 non-admitted candidate writes no scar
+  [PASS] A6   A1 cheap retry failure writes no scar
+  [PASS] A7   A2 evidence invalidity writes no scar
+  [PASS] A8   A3 authorized-but-no-completed-operation writes no scar
+  [PASS] A9   A4 completed trusted operation establishes scar eligibility
+  [PASS] A10  S0 exactly K_SOFT_PERSIST-1=2 raw soft warnings then clean writes no scar
+  [PASS] A11  S1 authorized hard structural failure writes one scar with REJECT_AS_IS
+  [PASS] A12  S2 authorized gate-effective soft degradation writes one scar with REQUIRE_EXTRA_PROOF
+  [PASS] A13  S3 authorized restoration failure writes one scar with REQUIRE_EXTRA_PROOF
+  [PASS] A14  M0 hard scar match rejects the same configuration as-is
+  [PASS] A15  M1 soft scar match requires extra proof and does not hard-reject by default
+  [PASS] A16  M2 similar but non-identical geometry beyond quantization boundary does not match
+  [PASS] A17  M3 same geometry with different failed_invariant_class matches the same scar
+  [PASS] A18  C0 repeated trusted failure increments failure_count
+  [PASS] A19  C1 repeated cheap rejected nominations do not increment failure_count
+  [PASS] A20  E0 elevation does not fire below T_SCAR_ELEVATE=3
+  [PASS] A21  E1 elevation fires when failure_count reaches T_SCAR_ELEVATE=3
+  [PASS] A22  E1 elevation event contains no semantic explanation field
+  [PASS] A23  R0 idle time alone does not retire an active scar
+  [PASS] A24  R1 successful cycles retire scar at T_SCAR_RETIRE_SUCCESS_CYCLES=5
+  [PASS] A25  R2 new trusted failure resets successful_cycles_since_last_seen to zero
+  [PASS] A26  The scar registry is not readable by the structural observer
+  [PASS] A27  The scar registry does not alter live shape_integrity classification
+  [PASS] A28  The scar registry does not update C_success
+  [PASS] A29  No task text, route history, route outcome, wrong-bypass label, or semantic category enters the fingerprint payload
+  [PASS] A30  Every scar written has valid structural evidence, available fingerprint, and completed prior authority
+
+FINAL VERDICT: SUPPORTED
+REASON:        all 30 assertions passed
+RUNTIME:       0.98s

@@ -1,0 +1,2 @@
+fingerprint_match_count,fingerprint_mismatch_count,fingerprint_unavailable_count,scar_written_count,no_scar_correct_count,false_scar_count,missed_scar_count,hard_scar_count,soft_scar_count,restoration_scar_count,scar_match_count,scar_false_match_count,scar_missed_match_count,failure_count_increment_count,failure_count_false_increment_count,elevation_event_count,false_elevation_count,missed_elevation_count,retired_scar_count,false_retirement_count,missed_retirement_count
+4,1,2,6,19,0,0,2,1,1,3,0,0,8,0,1,0,0,1,0,0

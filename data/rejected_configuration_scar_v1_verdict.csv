@@ -1,0 +1,2 @@
+verdict,reason,assertions_passed,assertions_total,runtime_s
+SUPPORTED,all 30 assertions passed,30,30,0.98
