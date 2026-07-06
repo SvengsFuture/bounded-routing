@@ -1,0 +1,7 @@
+scenario,route_id,dependent_cells,scope_status,c_success,route_authority_state,decision,bypass_allowed,fallback,reason,bypass_attempts,fallbacks,wrong_bypasses
+S01_dependent_route_revoked,route_dep,cell_dep,proven,0.9,ACTIVE,FALLBACK,False,True,cell_shed,1,1,0
+S02_independent_route_preserved,route_independent,cell_healthy_ind,proven,0.9,ACTIVE,BYPASS,True,False,all_gates_pass,1,0,0
+S03_uncertain_scope_fails_closed,route_unknown_scope,cell_uncertain,unknown,0.9,ACTIVE,FALLBACK,False,True,scope_not_proven,1,1,0
+S04_invalid_evidence,route_invalid_evidence,cell_invalid_evidence,unknown,0.9,ACTIVE,FALLBACK,False,True,scope_not_proven,1,1,0
+S08_hard_scar_blocks_reconstruction,route_hard_scar,cell_hard,proven,0.9,ACTIVE,FALLBACK,False,True,hard_scar,1,1,0
+S10_replacement_enters_requalification,route_replacement,cell_replacement_new,proven,0.9,ACTIVE,FALLBACK,False,True,cell_requalifying,1,1,0

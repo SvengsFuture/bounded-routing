@@ -1,0 +1,23 @@
+assertion_id,description,passed,evidence
+A1,Dependent routes cannot bypass after their required cell is shed.,True,cell_shed
+A2,Independent routes may remain eligible only when independence is proven.,True,all_gates_pass
+A3,Unknown route scope fails closed.,True,scope_not_proven
+A4,Invalid evidence does not authorize clean shedding.,True,SHEDDING_REVIEW
+A5,Invalid evidence does not write a scar.,True,False
+A6,Betrayed authority writes a scar.,True,789f80ee4b5cc3d141807329f71ef00c610c44b8e1d695c62b544fbc011db65d
+A7,Cheap retry failure does not write a scar.,True,NO_SCAR:cheap_retry:valid
+A8,Non-admitted candidate failure does not write a scar.,True,NO_SCAR:non_admitted_candidate:valid
+A9,Hard scar match returns REJECT_AS_IS.,True,REJECT_AS_IS
+A10,Soft scar match returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A11,Restoration scar match returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A12,No-match candidate is not blocked by scar status alone.,True,NO_MATCH
+A13,Replacement cell enters REQUALIFYING before active bypass.,True,REQUALIFYING
+A14,Replacement cell does not inherit active authority from the shed cell.,True,cell_requalifying
+A15,Historical route confidence does not override a shed boundary.,True,positive dependent-route check returned FALLBACK with reason=cell_shed
+A16,Historical route confidence does not override a hard scar.,True,hard_scar
+A17,Load-transfer success preserves only declared admissible work.,True,SUCCESS
+A18,Load-transfer failure escalates to broader recovery.,True,FAILED
+A19,Scar matching remains isolated from shape_integrity.,True,"params=['scar_registry', 'fingerprint']; admissible=REJECT_AS_IS; failed=REJECT_AS_IS"
+A20,Scar matching remains isolated from C_success.,True,"params=['scar_registry', 'fingerprint']; high=REJECT_AS_IS; low=REJECT_AS_IS"
+A21,Shedding event log contains required replay fields.,True,logs=6
+A22,The harness produces a deterministic final verdict from the assertion results.,True,assertions_before_A22=21

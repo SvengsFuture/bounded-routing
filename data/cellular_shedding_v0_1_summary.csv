@@ -1,0 +1,13 @@
+scenario,expected,observed,status
+S01_dependent_route_revoked,dependent route fallback,FALLBACK,PASS
+S02_independent_route_preserved,independent route may bypass,BYPASS,PASS
+S03_uncertain_scope_fails_closed,unknown scope fallback,FALLBACK,PASS
+S04_invalid_evidence,"no clean shedding, no scar, fail closed",cell=SHEDDING_REVIEW; scar=False; route=FALLBACK,PASS
+S05_betrayed_authority_writes_scar,scar written,True,PASS
+S06_cheap_retry_no_scar,no scar,False,PASS
+S07_non_admitted_no_scar,no scar,False,PASS
+S08_hard_scar_blocks_reconstruction,REJECT_AS_IS,REJECT_AS_IS,PASS
+S09_soft_and_restoration_require_extra_proof,soft and restoration require extra proof,soft=REQUIRE_EXTRA_PROOF; restoration=REQUIRE_EXTRA_PROOF,PASS
+S10_replacement_enters_requalification,"no scar match, replacement requalifies, no active bypass",scar=NO_MATCH; cell=REQUALIFYING; route=FALLBACK,PASS
+S11_load_transfer_success,bounded degraded operation,load=SUCCESS; escalated=False,PASS
+S12_load_transfer_failure,broader recovery escalation,load=FAILED; escalated=True,PASS

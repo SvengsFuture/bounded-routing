@@ -1,0 +1,15 @@
+scenario,event_type,cell_id,route_id,decision,details
+S01_dependent_route_revoked,scar_write,cell_dep,,WRITE_SCAR,failure_kind=betrayed_authority; evidence=valid
+S01_dependent_route_revoked,shed_cell,cell_dep,,SHED,load_transfer=SUCCESS
+S02_independent_route_preserved,scar_write,cell_failed_ind,,WRITE_SCAR,failure_kind=betrayed_authority; evidence=valid
+S02_independent_route_preserved,shed_cell,cell_failed_ind,,SHED,load_transfer=SUCCESS
+S04_invalid_evidence,scar_write,cell_invalid_evidence,,NO_SCAR:betrayed_authority:stale,had_authority=True; evidence=stale
+S04_invalid_evidence,shed_cell,cell_invalid_evidence,,NO_CLEAN_SHEDDING_AUTHORIZATION,evidence=stale
+S05_betrayed_authority_writes_scar,scar_write,cell_betrayed,,WRITE_SCAR,failure_kind=betrayed_authority; evidence=valid
+S05_betrayed_authority_writes_scar,shed_cell,cell_betrayed,,SHED,load_transfer=SUCCESS
+S06_cheap_retry_no_scar,scar_write,cell_cheap_retry,,NO_SCAR:cheap_retry:valid,had_authority=False; evidence=valid
+S07_non_admitted_no_scar,scar_write,cell_non_admitted,,NO_SCAR:non_admitted_candidate:valid,had_authority=False; evidence=valid
+S11_load_transfer_success,scar_write,cell_load_success,,WRITE_SCAR,failure_kind=betrayed_authority; evidence=valid
+S11_load_transfer_success,shed_cell,cell_load_success,,SHED,load_transfer=SUCCESS
+S12_load_transfer_failure,scar_write,cell_load_failure,,WRITE_SCAR,failure_kind=betrayed_authority; evidence=valid
+S12_load_transfer_failure,shed_cell,cell_load_failure,,SHED,load_transfer=FAILED

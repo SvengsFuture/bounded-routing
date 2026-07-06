@@ -1,0 +1,33 @@
+Cellular Shedding Simulation v1 Run Record
+
+Final verdict: SUPPORTED
+Assertions passed: 22/22
+Runtime seconds: 0.004540
+
+Script filename: cellular_shedding_sim_v1_REVIEWED.py
+Script SHA-256: 96aa3f1db24a8d5111345496f6667b80cde51a252254ae9cec41da4db6e33943
+
+Validation plan path: /mnt/data/cellular_shedding_primary_run_v1_corrected/docs/CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md
+Validation plan SHA-256: 4c073e5cdef9cd1e1812088bbf490775a658900cf790d87d632c049a4d821ae4
+
+Specification path: /mnt/data/cellular_shedding_primary_run_v1_corrected/docs/CELLULAR_SHEDDING_SPEC_v1_FROZEN.md
+Specification SHA-256: 8aaf925877d5bde60826a4a7ae3075d6177afaf41151e9d3a185bd4a1a27f512
+
+Document integrity: OK
+
+Python version: 3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]
+Platform: Linux-4.4.0-x86_64-with-glibc2.41
+
+Random seed: not used
+stderr status: empty if process exits 0
+
+Output inventory:
+cellular_shedding_v0_1_assertions.csv
+cellular_shedding_v0_1_cell_states.csv
+cellular_shedding_v0_1_load_transfer.csv
+cellular_shedding_v0_1_raw.csv
+cellular_shedding_v0_1_route_authority.csv
+cellular_shedding_v0_1_scar_events.csv
+cellular_shedding_v0_1_summary.csv
+cellular_shedding_v0_1_verdict.csv
+cellular_shedding_v0_1_run_record.txt
