@@ -1,12 +1,12 @@
-# ARD, SMS, and Bypass — Component Reference
+# ARD, SMS, and Bypass Component Reference
 
 ## Purpose
 
-This document defines the route-state model, confidence update process, and bypass decision sequence used by bounded routing.
+This document defines the route-state model, confidence update process, structural-integrity gate, scar check, and bypass decision sequence used by bounded routing.
 
 Bounded routing is the authority layer for the tetrahedral recovery architecture.
 
-The Adaptive Routing Database stores route-level state.
+The Adaptive Routing Database stores route-level state and decision references.
 
 The Success Measurement System updates historical route confidence.
 
@@ -14,184 +14,147 @@ The Intelligent Bypass Mechanism decides whether a learned route currently has p
 
 Live tetrahedral structural state remains separate from route confidence and enters the bypass decision through an independent structural-integrity gate.
 
+Rejected-configuration scars remain separate from both route confidence and current structural state. A scar records that an authorized structural configuration failed and should not be promoted again as-is.
+
 ## Adaptive Routing Database
 
-### Data Model
+Each ARD entry corresponds to one task and route class identified by S_pat.
 
-Each ARD entry corresponds to one task and route class identified by `S_pat`.
+An ARD entry may include:
 
-```text
-ARD entry:
-  s_pat                  : str
-  p_opt                  : str
-  c_success              : float
-  obs_count              : int
-  obs_window             : deque
-  last_used_ms           : float
-  depreciation_state     : str
-  depreciation_count     : int
-  last_flip_ms           : float
-  flip_count             : int
-  structural_cost        : float
-  recovery_sensitive     : bool
-  recovery_state         : str
-  authority_state        : str
-  structural_record_ref  : optional reference
-```
+s_pat, the task and route-class identifier.
 
-### Field Meanings
+p_opt, the current learned route identifier.
 
-| Field | Meaning |
-|---|---|
-| `s_pat` | Task and route-class identifier |
-| `p_opt` | Current learned route identifier |
-| `c_success` | Historical route-performance confidence in `[0.0, 1.0]` |
-| `obs_count` | Total qualifying route observations |
-| `obs_window` | Fixed-size recent route-outcome window |
-| `last_used_ms` | Timestamp of the most recent route attempt |
-| `depreciation_state` | `ACTIVE`, `WARNED`, `DEPRECATED`, or `RETIRED` |
-| `depreciation_count` | Consecutive below-threshold route outcomes |
-| `last_flip_ms` | Timestamp of the most recent `p_opt` change |
-| `flip_count` | Total route changes |
-| `structural_cost` | Current route-level structural cost |
-| `recovery_sensitive` | Whether recovery affects this route's authority |
-| `recovery_state` | Current recovery or requalification condition |
-| `authority_state` | `ACTIVE`, `BLOCKED`, `REQUALIFYING`, or `REVOKED` |
-| `structural_record_ref` | Reference to the independent structural observation used by the current decision |
+c_success, the historical route-performance confidence.
+
+obs_count, the number of qualifying route observations.
+
+obs_window, the recent route-outcome window.
+
+last_used_ms, the timestamp of the most recent route attempt.
+
+depreciation_state, the current route depreciation state.
+
+depreciation_count, the count of consecutive below-threshold route outcomes.
+
+last_flip_ms, the timestamp of the most recent p_opt change.
+
+flip_count, the total number of route changes.
+
+structural_cost, the current route-level structural cost.
+
+recovery_sensitive, whether recovery affects this route's authority.
+
+recovery_state, the current recovery or requalification condition.
+
+authority_state, whether bypass authority is active, blocked, requalifying, or revoked.
+
+structural_record_ref, a reference to the independent structural observation used by the current decision.
+
+shape_integrity, the current authorized structural condition consumed by the bypass gate.
+
+scar_match_ref, a reference to any rejected-configuration scar match used by the current decision.
+
+scar_status, the current scar result for the candidate structural configuration.
 
 The ARD stores route-level evidence and authority state.
 
 It does not compute tetrahedral structural integrity.
 
-A structural record may be referenced by an ARD entry for traceability, but its contents must remain independently sourced and must not be blended into `c_success`.
+It does not create scar records.
 
-## Depreciation and Authority State
+A structural record may be referenced by an ARD entry for traceability, but its contents must remain independently sourced and must not be blended into c_success.
 
-### Depreciation State Machine
-
-```text
-ACTIVE
-  |-- c_success below T_depreciate for N qualifying steps --> WARNED
-
-WARNED
-  |-- c_success recovers above T_depreciate              --> ACTIVE
-  |-- c_success remains low for M additional steps       --> DEPRECATED
-
-DEPRECATED
-  |-- fallback only
-  |-- no bypass authority
-  |-- may remain fail-closed
-  |-- may enter a declared fresh-evidence requalification process
-
-RETIRED
-  |-- removed from active ARD use
-  |-- future observations require a new route record
-```
+A scar result may also be referenced by an ARD entry for traceability, but it must remain separate from c_success and shape_integrity.
 
 A deprecated route does not become active merely because old confidence rises or time passes.
 
 Any return to active authority must follow the declared requalification process.
 
-### Authority State
+A route that matches a hard scar cannot be promoted again as-is.
+
+## Depreciation and Authority State
+
+Depreciation state describes route health over time.
+
+ACTIVE means the route may be considered for bypass.
+
+WARNED means the route has crossed the depreciation warning boundary but has not yet become fail-closed.
+
+DEPRECATED means the route cannot bypass and may enter a declared requalification path.
+
+RETIRED means the route is removed from active ARD use.
 
 Authority state is separate from depreciation state.
 
-```text
-ACTIVE
-  route may be considered for bypass
+ACTIVE means the route may be considered for bypass.
 
-BLOCKED
-  one or more current gates prevent bypass
+BLOCKED means one or more current gates prevent bypass.
 
-REQUALIFYING
-  route is accumulating fresh evidence but cannot bypass
+REQUALIFYING means the route is accumulating fresh evidence but cannot bypass.
 
-REVOKED
-  prior bypass authority has been withdrawn
-```
+REVOKED means prior bypass authority has been withdrawn.
 
 A route may have acceptable historical confidence and still be blocked or revoked.
 
-A route may also remain non-deprecated while requalifying after recovery.
+A route may remain non-deprecated while requalifying after recovery.
+
+A route may pass route confidence and still fail shape integrity.
+
+A route may pass route confidence and shape integrity but still fail the scar check.
 
 ## ARD Write Policy
 
-Only the Success Measurement System writes `c_success`.
+Only the Success Measurement System writes c_success.
 
 No other component may directly increase or decrease route confidence.
 
-Full analysis may propose or replace `p_opt` when a better route is found.
+Full analysis may propose or replace p_opt when a better route is found.
 
-Each `p_opt` change increments `flip_count` and updates `last_flip_ms`.
+Each p_opt change increments flip_count and updates last_flip_ms.
 
-Recovery logic may change `recovery_state` and `authority_state`.
+Recovery logic may change recovery_state and authority_state.
 
-The structural observer may publish a new structural-integrity record, but it does not modify `c_success`.
+The structural observer may publish a new structural-integrity record, but it does not modify c_success.
+
+The scar registry may return a match result, but it does not modify c_success or shape_integrity.
 
 The Intelligent Bypass Mechanism reads all required state and produces an allow or fallback decision. It does not rewrite historical evidence to make a route pass.
 
 ## Success Measurement System
 
-### Purpose
-
 The Success Measurement System records how well a route has performed over time.
 
-It answers:
+It answers the historical route question: how successful has this route been?
 
-How successful has this route been?
+It does not answer the structural question: is the tetrahedral substrate currently intact enough to permit bypass?
 
-It does not answer:
+It does not answer the rejected-configuration question: has this same structural configuration already failed after holding authority?
 
-Is the tetrahedral substrate structurally intact at this moment?
+After a qualifying route observation, SMS computes an outcome score between 0.0 and 1.0.
 
-### Outcome Scoring
-
-After a qualifying route observation, SMS computes an `outcome_score` in `[0.0, 1.0]`.
-
-```text
-outcome_score =
-    w_lat  * latency_score
-  + w_adm  * admissibility_score
-  + w_deg  * degradation_score
-  + w_stab * stability_score
-```
-
-The v1 simulation used:
-
-```text
-w_lat  = 0.30
-w_adm  = 0.40
-w_deg  = 0.20
-w_stab = 0.10
-```
+The outcome score may include latency, admissibility, degradation, and stability.
 
 Admissibility carries the highest weight because an inadmissible route result is more serious than an ordinary performance shortfall.
 
-These weights are simulation parameters, not universal constants.
+The confidence update has the form:
 
-### Confidence Update
+c_success_new equals alpha times c_success_old plus one minus alpha times outcome_score.
 
-```text
-c_success_new =
-    alpha * c_success_old
-  + (1 - alpha) * outcome_score
-```
+The V1 simulation used alpha equals 0.85.
 
-The v1 simulation used:
+A higher alpha produces slower confidence movement.
 
-```text
-alpha = 0.85
-```
+A lower alpha responds faster to new outcomes but may increase sensitivity to noise and oscillation.
 
-A higher `alpha` produces slower confidence movement.
+The V3 result showed that slow scalar confidence decay was not sufficient to provide early post-promotion revocation under the tested relapse workload.
 
-A lower `alpha` responds faster to new outcomes but may increase sensitivity to noise and oscillation.
+The V4 result showed that an independent structural-integrity gate can revoke unsafe bypass authority earlier than the inherited flat route gate under the frozen matched structural-deformation workload.
 
-The v3 result showed that slow scalar confidence decay was not sufficient to provide early post-promotion revocation under the tested relapse workload.
+## Stability Score
 
-### Stability Score
-
-The stability score is derived from variation in recent route outcomes stored in `obs_window`.
+The stability score is derived from variation in recent route outcomes stored in obs_window.
 
 High variation lowers the score.
 
@@ -201,44 +164,19 @@ The stability score remains a route-performance measure.
 
 It is not a substitute for live tetrahedral shape integrity.
 
+It is not a substitute for a scar lookup.
+
 ## Tetrahedral Structural-Integrity Record
 
 The tetrahedral substrate provides a separate structural record.
 
-A valid record should contain at least:
-
-```text
-Structural integrity record:
-  source_id              : str
-  observer_type          : str
-  timestamp_ms           : float
-  structural_epoch       : str or int
-  scope_type             : str
-  scope_id               : str
-  fact_state             : structured evidence
-  logic_state            : structured evidence
-  coherence_state        : structured evidence
-  coordinator_result     : structured evidence
-  shape_integrity        : scalar, enum, or bounded record
-  verification_status    : str
-```
-
-The exact schema remains a design task.
+A valid record should contain the authorized source identity, observer type, observation timestamp, structural epoch, scope type, scope identifier, Fact evidence, Logic evidence, Coherence evidence, coordinator result, shape-integrity condition, and verification status.
 
 The record must preserve enough evidence to inspect or replay how the structural conclusion was reached.
 
 A single scalar may be exposed to the bypass gate, but the underlying role-separated or geometric evidence must not be discarded.
 
-### Structural Record Admissibility
-
-A structural record is usable only when:
-
-- its source is authorized
-- its timestamp is fresh
-- its structural epoch matches the active substrate
-- its scope applies to the route or system being evaluated
-- its integrity can be verified
-- its structural condition remains inside the declared bound
+A structural record is usable only when its source is authorized, its timestamp is fresh, its structural epoch matches the active substrate, its scope applies to the route or system being evaluated, its integrity can be verified, and its structural condition remains inside the declared bound.
 
 If any of these conditions fails, structural authority is absent.
 
@@ -246,56 +184,127 @@ The router must fall back to full analysis.
 
 A previous valid structural record cannot preserve authority indefinitely.
 
+## V4 Structural Gate Result
+
+V4 tested the independent structural-integrity gate.
+
+The comparison changed one authority variable: whether the independent shape-integrity gate was consumed.
+
+The primary V4 result was SUPPORTED.
+
+The V4 run passed 26 of 26 assertions.
+
+The flat V4-C arm recorded 404 matched wrong bypasses.
+
+The shape-gated V4-D arm recorded 14 matched wrong bypasses.
+
+That was a 96.53 percent reduction under the frozen matched structural-deformation workload.
+
+Earlier revocation occurred in 100 percent of eligible matched instances.
+
+The median revocation lead was 1860 milliseconds.
+
+The clean suppression check passed.
+
+This supports the narrow claim that live structural evidence can revoke unsafe bypass authority earlier than the inherited flat route gate under the declared synthetic deformation workload.
+
+It does not prove production reliability, threshold optimality, final route scope, or the complete tetrahedral architecture.
+
+## Rejected-Configuration Scar Record
+
+The scar registry stores compact rejected-configuration records.
+
+The governing rule is: only betrayed authority creates a scar.
+
+A cheap retry does not create a scar.
+
+A non-admitted candidate does not create a scar.
+
+Invalid, stale, unverifiable, epoch-mismatched, or out-of-scope evidence does not create a scar.
+
+A scar is written only when a configuration had authority and later failed under valid structural evidence.
+
+A scar record may include a geometry-only fingerprint, scar class, failure count, first seen time, last seen time, elevation state, retirement state, and adjacent metadata such as failed invariant class.
+
+The failed invariant class may be stored as adjacent metadata, but it must not enter the geometry fingerprint hash payload.
+
+A hard scar returns REJECT_AS_IS.
+
+A soft or restoration scar returns REQUIRE_EXTRA_PROOF.
+
+A no-match result does not block promotion by itself.
+
+Scar matching must remain isolated from shape_integrity and c_success.
+
+The scar registry does not explain why the configuration failed.
+
+It is not semantic memory.
+
+It is not a full history.
+
+It is not cellular shedding.
+
+It is not lineage inheritance.
+
+It is not prospective filtering.
+
+It is not fuzzy matching.
+
+It is not an extra-proof protocol.
+
+## Scar Layer V1 Result
+
+The frozen scar validation used:
+
+K_SOFT_PERSIST equals 3.
+
+T_SCAR_ELEVATE equals 3.
+
+T_SCAR_RETIRE_SUCCESS_CYCLES equals 5.
+
+The primary scar result was SUPPORTED.
+
+The run passed 30 of 30 assertions.
+
+Runtime was 0.98 seconds.
+
+stderr was empty.
+
+The test supports the narrow claim that scars can be written only for betrayed authority, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
+
 ## Intelligent Bypass Mechanism
 
-### Decision Sequence
+At task arrival, the Pattern Recognition Engine produces S_pat.
 
-```text
-task arrives
-  |
-  +--> PRE produces S_pat
-  |
-  +--> ARD lookup(S_pat)
-         |
-         +-- not found or RETIRED
-         |     --> full analysis
-         |
-         +-- found
-               |
-               +--> gate 1: sufficient route history?
-               |       NO --> full analysis
-               |
-               +--> gate 2: c_success >= T_bypass?
-               |       NO --> full analysis
-               |
-               +--> gate 3: depreciation state permits?
-               |       NO --> full analysis
-               |
-               +--> gate 4: structural_cost <= T_cost?
-               |       NO --> full analysis
-               |
-               +--> gate 5: recovery and authority state permit?
-               |       NO --> full analysis
-               |
-               +--> gate 6: anti-oscillation state permits?
-               |       NO --> full analysis
-               |
-               +--> gate 7: structural record authorized?
-               |       NO --> full analysis
-               |
-               +--> gate 8: structural record fresh?
-               |       NO --> full analysis
-               |
-               +--> gate 9: structural epoch matches?
-               |       NO --> full analysis
-               |
-               +--> gate 10: structural scope applies?
-               |       NO --> full analysis
-               |
-               +--> gate 11: shape integrity inside bound?
-                       NO --> full analysis
-                       YES --> bounded bypass along P_opt
-```
+The ARD returns the applicable route record.
+
+The system verifies that route history is sufficient.
+
+The system checks that c_success is at or above T_bypass.
+
+The system checks that the depreciation state permits bypass.
+
+The system checks that structural_cost is at or below T_cost.
+
+The system checks that recovery and authority state permit bypass.
+
+The system checks that anti-oscillation state permits bypass.
+
+The system checks that the structural record is authorized.
+
+The system checks that the structural record is fresh.
+
+The system checks that the structural epoch matches.
+
+The system checks that the structural scope applies.
+
+The system checks that shape integrity is inside the declared bound.
+
+The system checks whether the candidate configuration matches a rejected-configuration scar.
+
+If every required gate passes, the task may execute through p_opt.
+
+If any required gate fails, the task goes through full analysis.
 
 After execution, SMS records the qualifying route outcome and ARD state is updated where applicable.
 
@@ -307,25 +316,15 @@ Valid structural state cannot override a deprecated route.
 
 Elapsed time cannot override required fresh requalification evidence.
 
+A hard scar cannot be overridden by historical route confidence.
+
 ## Anti-Oscillation Gate
 
-Bypass is blocked when either condition is true:
-
-```text
-current_time_ms - last_flip_ms < T_flip_cooldown_ms
-```
-
-or:
-
-```text
-recent_flip_count >= MAX_FLIPS_PER_WINDOW
-```
-
-Recent flips are counted inside `T_flip_window_ms`.
+Bypass is blocked when the route has flipped too recently or too often within the declared flip window.
 
 This prevents rapid alternation between routes that retain misleading confidence.
 
-The v1 oscillation workload produced the clearest supported result in the simulation series.
+The V1 oscillation workload produced the clearest early supported result in the simulation series.
 
 The naive cache recorded 64 wrong bypasses.
 
@@ -341,7 +340,7 @@ A candidate route may be evaluated in shadow on that task, but the result applie
 
 Pre-recovery confidence does not count as fresh evidence.
 
-A route in `REQUALIFYING` cannot bypass.
+A route in REQUALIFYING cannot bypass.
 
 Promotion requires the declared number of consecutive admissible shadow checks and the declared fresh-confidence threshold.
 
@@ -349,16 +348,11 @@ A failed check may reset the consecutive count and reduce fresh confidence.
 
 A persistent-failure route may become deprecated and remain fail-closed.
 
-The v2 primary workload used:
-
-```text
-K = 5
-fresh confidence threshold = 0.75
-```
+The V2 primary workload used K equals 5 and a fresh confidence threshold of 0.75.
 
 Those values are simulation settings, not universal requirements.
 
-The v3 sensitivity test showed that increasing `K` from 3 to 5 to 8 delayed restoration and increased fallback without reducing post-promotion wrong bypasses in the tested relapse workload.
+The V3 sensitivity test showed that increasing K from 3 to 5 to 8 delayed restoration and increased fallback without reducing post-promotion wrong bypasses in the tested relapse workload.
 
 ## Why the Structural Gate Remains Independent
 
@@ -374,34 +368,49 @@ A low confidence average could also obscure whether the route itself failed or w
 
 Keeping the signals separate makes the decision auditable.
 
-The system can record whether authority was denied because of confidence, depreciation, recovery, oscillation, structural cost, freshness, epoch mismatch, scope mismatch, or actual shape deformation.
+The system can record whether authority was denied because of confidence, depreciation, recovery, oscillation, structural cost, freshness, epoch mismatch, scope mismatch, actual shape deformation, or rejected-configuration scar status.
 
-That distinction is necessary for both recovery and replay.
+That distinction is necessary for recovery, replay, and future shedding work.
 
 ## Simulation Parameter Reference
 
-The values below describe the v1 flat harness unless otherwise stated.
+The values below describe the early flat harness unless otherwise stated.
 
-| Parameter | Default | Meaning |
-|---|---:|---|
-| `T_bypass` | 0.75 | Minimum historical route confidence for bypass |
-| `T_depreciate` | 0.55 | Confidence below which depreciation begins |
-| `T_recover` | 0.70 | Earlier flat-harness recovery threshold |
-| `T_cost` | 1.5 | Maximum route-level structural cost multiplier |
-| `alpha` | 0.85 | Confidence decay factor |
-| `obs_window_size` | 20 | Number of recent route outcomes tracked |
-| `depreciation_N` | 5 | Qualifying low outcomes before warning |
-| `depreciation_M` | 10 | Additional low outcomes before deprecation |
-| `recover_K` | 8 | Earlier flat-harness recovery count |
-| `T_retire_ms` | 60000 | Inactivity period before retirement |
-| `T_flip_cooldown_ms` | 2000 | Minimum time between route flips |
-| `MAX_FLIPS_PER_WINDOW` | 3 | Maximum allowed flips in the flip window |
-| `T_flip_window_ms` | 10000 | Window used to count route flips |
-| `T_recovery_blackout_ms` | 5000 | V1 fixed recovery blackout |
+T_bypass was 0.75.
 
-The v2 and v3 requalification tests used separate fresh-evidence rules and sensitivity values.
+T_depreciate was 0.55.
 
-The tetrahedral structural-record threshold, freshness interval, epoch rules, and scope model have not yet been frozen.
+T_recover was 0.70 in the earlier flat harness.
+
+T_cost was 1.5.
+
+alpha was 0.85.
+
+obs_window_size was 20.
+
+depreciation_N was 5.
+
+depreciation_M was 10.
+
+recover_K was 8 in the earlier flat harness.
+
+T_retire_ms was 60000.
+
+T_flip_cooldown_ms was 2000.
+
+MAX_FLIPS_PER_WINDOW was 3.
+
+T_flip_window_ms was 10000.
+
+T_recovery_blackout_ms was 5000 in V1.
+
+The V2 and V3 requalification tests used separate fresh-evidence rules and sensitivity values.
+
+The V4 shape-gate test used its own frozen structural-deformation workload and assertion set.
+
+The scar validation used K_SOFT_PERSIST equals 3, T_SCAR_ELEVATE equals 3, and T_SCAR_RETIRE_SUCCESS_CYCLES equals 5.
+
+These are simulation settings and validation constants, not universal production defaults.
 
 ## Current Evidence Boundary
 
@@ -409,10 +418,14 @@ V1 supports anti-oscillation gating under the tested oscillation workload.
 
 V2 supports removal of stale bypass authority, fresh-evidence requalification, and fail-closed handling of persistent-failure routes.
 
-V3 does not support the claim that the current flat Arm D gate stack revokes unsafe post-promotion authority faster than simpler comparison arms.
+V3 does not support the claim that the flat Arm D gate stack revokes unsafe post-promotion authority faster than simpler comparison arms.
 
-In all 15 eligible v3 borderline instances, confidence was the first blocking gate.
+V4 supports the narrow claim that an independent structural-integrity gate can revoke unsafe bypass authority earlier than the inherited flat gate under the frozen matched structural-deformation workload.
 
-The next mechanism to define and test is the independent tetrahedral structural-integrity gate.
+Scar Layer V1 supports the narrow claim that rejected-configuration scars can be written, matched, elevated, and retired under declared authority and evidence rules.
 
-That work must preserve role-separated evidence, provenance, freshness, epoch integrity, and scope without folding structural condition into `c_success`.
+The current evidence does not prove production reliability, threshold optimality, final route scope, cellular shedding, lineage inheritance, fuzzy scar matching, prospective filtering, or an extra-proof recovery protocol.
+
+The next mechanism to define is cellular shedding.
+
+
