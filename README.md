@@ -6,9 +6,9 @@ Bounded routing is a route-selection discipline for adaptive systems. It governs
 
 The governing constraint is admissibility, not speed alone.
 
-A route may bypass only while its confidence, structural cost, recovery context, depreciation state, oscillation behavior, and applicable structural conditions remain inside declared bounds.
+A route may bypass only while its confidence, structural cost, recovery context, depreciation state, oscillation behavior, applicable structural conditions, scar status, and local cell authority remain inside declared bounds.
 
-This repository now records bounded routing as the authority layer for the tetrahedral recovery architecture. The routing layer grants, maintains, and revokes bypass authority. The tetrahedral substrate supplies live structural state through the Fact, Logic, and Coherence roles and their coordinator. The recovery layer reconstructs the tetrahedral structure when confirmed recovery invariants fail.
+This repository records bounded routing as the authority layer for the tetrahedral recovery architecture. The routing layer grants, maintains, and revokes bypass authority. The tetrahedral substrate supplies live structural state through the Fact, Logic, and Coherence roles and their coordinator. The recovery layer reconstructs the tetrahedral structure when confirmed recovery invariants fail.
 
 Those responsibilities remain separate.
 
@@ -18,19 +18,23 @@ Those responsibilities remain separate.
 
 A scar records that an authorized structural configuration failed and should not be promoted again as-is.
 
+Cellular shedding removes a damaged local cell from active authority after failure.
+
 ## Current Status
 
-The simulation series now has three main conclusions.
+The simulation series now has six main conclusions.
 
 V1 supports the anti-oscillation gate under the tested oscillation workload.
 
 V2 supports removal of stale authority and earned recovery through fresh requalification evidence.
 
-V3 does not support the stronger claim that the flat bounded-routing gate stack revokes unsafe post-promotion authority faster than simpler comparison controls under the tested relapse workload. V3 identified the limit of the flat harness: route confidence decayed too slowly, and the additional route-level gates did not detect degradation first.
+V3 does not support the stronger claim that the flat bounded-routing gate stack revokes unsafe post-promotion authority faster than simpler comparison controls under the tested relapse workload. V3 identified the limit of the flat harness. Route confidence decayed too slowly, and the additional route-level gates did not detect degradation first.
 
 V4 adds an independent tetrahedral shape-integrity gate and supports the narrow claim that live structural evidence can withdraw unsafe bypass authority earlier than the inherited flat gate under the frozen matched structural-deformation workload.
 
 The scar layer adds a minimal rejected-configuration memory primitive. It supports the narrow claim that scars can be written only for betrayed authority, ignored for cheap or invalid failures, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
+
+Cellular Shedding V1 adds local structural removal after cell failure. It supports the narrow claim that a local failed cell can be removed from active authority while preserving the correct route-authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary under the frozen synthetic harness.
 
 ## V4 Shape Gate Result
 
@@ -129,6 +133,54 @@ docs/REJECTED_CONFIGURATION_SCAR_VALIDATION_PLAN_v1_FROZEN.md
 docs/REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 ```
 
+## Cellular Shedding V1 Result
+
+Cellular Shedding V1 tests local structural removal after a damaged cell loses authority.
+
+The governing rule is:
+
+```text
+Do not preserve failed authority through continuity of form.
+```
+
+A shed cell cannot support bypass authority.
+
+A quarantined cell cannot support bypass authority.
+
+A reconstructing cell cannot support bypass authority.
+
+A requalifying replacement cell cannot support bypass authority until it earns fresh authority under the declared process.
+
+The frozen shedding validation tested dependent-route revocation, independent-route preservation, uncertain-scope fail-closed behavior, invalid-evidence exclusion, betrayed-authority scar writing, cheap retry exclusion, non-admitted candidate exclusion, hard scar reconstruction blocking, soft and restoration scar extra-proof routing, replacement-cell requalification, load-transfer success, load-transfer failure, and replay-log coverage.
+
+The frozen shedding result was:
+
+```text
+Final verdict:       SUPPORTED
+Assertions:          22/22 passed
+Document integrity:  OK
+Script filename:     cellular_shedding_sim_v1_REVIEWED.py
+```
+
+The run record verified the frozen document hashes:
+
+```text
+Specification SHA-256:      8aaf925877d5bde60826a4a7ae3075d6177afaf41151e9d3a185bd4a1a27f512
+Validation plan SHA-256:    4c073e5cdef9cd1e1812088bbf490775a658900cf790d87d632c049a4d821ae4
+```
+
+Cellular Shedding V1 supports the narrow claim that a local failed cell can be removed from active authority while preserving the correct route-authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary under the frozen synthetic harness.
+
+It does not validate lineage inheritance. It does not validate fuzzy scar matching. It does not validate prospective filtering. It does not validate production recovery. It does not validate a full extra-proof protocol. It does not prove that every structural failure is locally shed-able. It does not prove uninterrupted service. It does not prove production reliability.
+
+See:
+
+```text
+docs/CELLULAR_SHEDDING_SPEC_v1_FROZEN.md
+docs/CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md
+docs/CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+```
+
 ## Simulation Series
 
 ### V1 Initial Harness
@@ -163,8 +215,8 @@ V3 created the harder matched workload identified after V2. Borderline routes we
 The primary V3 matched results were:
 
 ```text
-Naive cache wrong bypasses:          105
-Timer-bound recovery wrong bypasses: 123
+Naive cache wrong bypasses:           105
+Timer-bound recovery wrong bypasses:  123
 Requalifying recovery wrong bypasses: 126
 ```
 
@@ -180,15 +232,23 @@ V4 tested that independent structural signal.
 
 V4-D added the tetrahedral shape-integrity gate to the inherited flat bounded-routing mechanism. Under the frozen V4 plan, the direct comparison changed only one authority variable: whether the independent shape gate was consumed.
 
-The V4 result was `SUPPORTED`.
+The V4 result was SUPPORTED.
 
 ### Scar Layer V1
 
 The scar layer sits after the shape-gate work. It defines what kind of compact structural record is left when an authorized configuration fails.
 
-The scar result was `SUPPORTED`.
+The scar result was SUPPORTED.
 
 The scar layer is intentionally narrow. It is a rejected-configuration registry, not a general memory system.
+
+### Cellular Shedding V1
+
+Cellular shedding sits after the scar-layer work. It defines how a damaged local cell is removed from active authority after failure.
+
+The shedding result was SUPPORTED.
+
+The shedding layer is intentionally narrow. It is local authority removal and boundary preservation, not lineage inheritance, production recovery, fuzzy matching, or extra-proof behavior.
 
 ## Repository Structure
 
@@ -211,11 +271,15 @@ bounded-routing/
 |   |-- REJECTED_CONFIGURATION_SCAR_SPEC_v1_REVISED.md
 |   |-- REJECTED_CONFIGURATION_SCAR_VALIDATION_PLAN_v1_FROZEN.md
 |   |-- REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+|   |-- CELLULAR_SHEDDING_SPEC_v1_FROZEN.md
+|   |-- CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md
+|   |-- CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 |-- scripts/
 |   |-- bounded_routing_sim_v1.py
 |   |-- bounded routing sim v2.py
 |   |-- bounded routing sim v3.py
 |   |-- rejected_configuration_scar_sim_v1_REVIEWED.py
+|   |-- cellular_shedding_sim_v1_REVIEWED.py
 |-- data/
 |   |-- bounded_routing_v1_raw.csv
 |   |-- bounded_routing_v1_summary.csv
@@ -236,6 +300,15 @@ bounded-routing/
 |   |-- rejected_configuration_scar_v1_assertions.csv
 |   |-- rejected_configuration_scar_v1_verdict.csv
 |   |-- rejected_configuration_scar_v1_run_record.txt
+|   |-- cellular_shedding_v0_1_raw.csv
+|   |-- cellular_shedding_v0_1_summary.csv
+|   |-- cellular_shedding_v0_1_cell_states.csv
+|   |-- cellular_shedding_v0_1_route_authority.csv
+|   |-- cellular_shedding_v0_1_scar_events.csv
+|   |-- cellular_shedding_v0_1_load_transfer.csv
+|   |-- cellular_shedding_v0_1_assertions.csv
+|   |-- cellular_shedding_v0_1_verdict.csv
+|   |-- cellular_shedding_v0_1_run_record.txt
 |-- plots/
 |   |-- latency_by_phase_v1.png
 |   |-- safety_metrics_v1.png
@@ -280,6 +353,12 @@ Run the scar validation with:
 python scripts/rejected_configuration_scar_sim_v1_REVIEWED.py
 ```
 
+Run the cellular shedding validation with:
+
+```bash
+python scripts/cellular_shedding_sim_v1_REVIEWED.py
+```
+
 The V4 shape-gate result is recorded in the V4 docs listed above.
 
 ## What This Does Not Claim
@@ -296,20 +375,23 @@ It does not prove the complete tetrahedral architecture.
 
 It does not prove that every successfully requalified route will remain safe under later degradation.
 
-It does not prove cellular shedding, lineage inheritance, prospective filtering, fuzzy scar matching, or extra-proof recovery.
+It does not prove lineage inheritance, prospective filtering, fuzzy scar matching, or extra-proof recovery.
 
 It does not prove that the system knows why a structural configuration failed.
+
+It does not prove that every structural failure can be locally shed.
+
+It does not prove uninterrupted service during shedding.
 
 Full analysis remains the safety baseline and the correct fallback whenever bypass authority is not earned or required structural evidence is absent.
 
 ## Next Architectural Work
 
-The next layer is cellular shedding.
+The next layer is lineage inheritance.
 
 The scar layer defines what record is left behind when an authorized structural configuration fails.
 
-Shedding must define how a damaged cell is cut away, how its authority is removed, and how adjacent healthy structure carries the load.
+Shedding defines how a damaged cell is cut away, how its authority is removed, and how adjacent healthy structure carries the load.
 
-Lineage comes after shedding. It must define how a regenerated cell inherits a compact rejected-configuration list without inheriting the full history.
-
+Lineage must define how a regenerated cell inherits a compact rejected-configuration list without inheriting the full history or old active authority.
 
