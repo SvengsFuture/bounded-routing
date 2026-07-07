@@ -1,9 +1,7 @@
-# File Map
-
+File Map
 What each file is and why it exists.
 
-## Root
-
+Root
 README.md
 
 Public entry point. Mechanism summary, current status, V4 shape-gate result, scar-layer result, scope boundaries, and repository status. Start here.
@@ -16,8 +14,7 @@ FILE_MAP.md
 
 This file.
 
-## docs/
-
+docs/
 bounded_routing_mechanism.md
 
 Core mechanism reference. Defines bounded routing, the PRE, ARD, SMS, and IBM components, the admissibility constraint, and the limits of the claim.
@@ -70,8 +67,19 @@ REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 
 Final scar validation result record. Reports the SUPPORTED verdict, 30/30 assertions, clean stderr, runtime, hashes, and limits of the scar-layer claim.
 
-## scripts/
+CELLULAR_SHEDDING_SPEC_v1_FROZEN.md
 
+Frozen cellular shedding specification. Defines local structural removal after a damaged cell loses authority, including shed boundaries, authority revocation, scar interaction, replacement-cell requalification, load transfer, and non-claims.
+
+CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md
+
+Frozen cellular shedding validation plan. Defines the narrow v1 test boundary, twelve scenarios, twenty-two assertions, output files, and verdict boundary for the shedding harness.
+
+CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+
+Final cellular shedding result record. Reports the SUPPORTED verdict, 22/22 assertions, document integrity, output hashes, and limits of the cellular-shedding claim.
+
+scripts/
 bounded_routing_sim_v1.py
 
 Original three-arm simulation harness. Uses stable, drift, fault, recovery, and oscillation phases. Preserved as the V1 technical record.
@@ -104,8 +112,15 @@ Run directly:
 
 python scripts/rejected_configuration_scar_sim_v1_REVIEWED.py
 
-## data/
+cellular_shedding_sim_v1_REVIEWED.py
 
+Reviewed cellular shedding validation harness. Implements the frozen shedding plan without lineage inheritance, fuzzy scar matching, prospective filtering, production recovery, or a full extra-proof protocol claim.
+
+Run directly:
+
+python scripts/cellular_shedding_sim_v1_REVIEWED.py
+
+data/
 bounded_routing_v1_raw.csv
 
 One row per task, arm, and seed from the V1 harness.
@@ -202,8 +217,43 @@ rejected_configuration_scar_v1_run_record.txt
 
 Scar validation execution record, including runtime, hashes, assertion status, and output inventory.
 
-## plots/
+cellular_shedding_v0_1_raw.csv
 
+Raw event-level cellular shedding validation output.
+
+cellular_shedding_v0_1_summary.csv
+
+Scenario-level cellular shedding validation summary.
+
+cellular_shedding_v0_1_cell_states.csv
+
+Cell-state transition output for the shedding validation run.
+
+cellular_shedding_v0_1_route_authority.csv
+
+Route-authority decision output showing bypass and fallback behavior across shedding scenarios.
+
+cellular_shedding_v0_1_scar_events.csv
+
+Scar write and scar match events produced by the shedding validation harness.
+
+cellular_shedding_v0_1_load_transfer.csv
+
+Load-transfer outcome output showing bounded degraded operation and broader recovery escalation cases.
+
+cellular_shedding_v0_1_assertions.csv
+
+Assertion-by-assertion cellular shedding validation results.
+
+cellular_shedding_v0_1_verdict.csv
+
+Final cellular shedding verdict output.
+
+cellular_shedding_v0_1_run_record.txt
+
+Cellular shedding validation execution record, including runtime, hashes, assertion status, document integrity, and output inventory.
+
+plots/
 latency_by_phase_v1.png
 
 Mean and p95 latency by arm and V1 workload phase.
@@ -264,8 +314,7 @@ scar_v1_elevation_retirement.png
 
 Scar validation elevation and retirement plot.
 
-## Series Status
-
+Series Status
 V1 is the original bounded-routing harness and established the clearest anti-oscillation separation.
 
 V2 added earned post-recovery route requalification. It showed that stale authority can be removed, qualified routes can regain authority using fresh evidence, and persistent-failure routes can remain fail-closed.
@@ -276,4 +325,6 @@ V4 added the independent tetrahedral shape-integrity gate. Under the frozen matc
 
 The scar layer added a compact rejected-configuration registry. Under the frozen scar validation plan, scars were written only for betrayed authority, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
 
-The next architectural work is cellular shedding, followed by lineage inheritance.
+Cellular Shedding V1 added local structural removal after cell failure. Under the frozen shedding validation plan, the reviewed harness passed 22/22 assertions and supported the narrow claim that a local failed cell can be removed from active authority while preserving the correct authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary.
+
+The next architectural work is lineage inheritance.
