@@ -1,14 +1,14 @@
 # Bounded Routing Simulation Verdict
 
-Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, and Scar Layer V1.
+Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, Scar Layer V1, and Cellular Shedding V1.
 
 Current overall verdict: PARTIAL SUPPORT.
 
-The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, and fail under live structural conditions.
+The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, fail under live structural conditions, and require local structural removal after a cell loses authority.
 
 The results support bounded bypass authority as a useful control mechanism. They do not establish that bounded routing is always safer, always faster, or optimal under every workload.
 
-The series now separates five findings.
+The series now separates six findings.
 
 V1 tested bounded routing under drift, fault, recovery, and oscillation.
 
@@ -19,6 +19,8 @@ V3 tested whether the full requalifying gate stack could revoke unsafe authority
 V4 tested whether an independent tetrahedral shape-integrity gate could revoke unsafe bypass authority earlier than the inherited flat gate under a frozen matched structural-deformation workload.
 
 Scar Layer V1 tested whether a minimal rejected-configuration registry could write, match, elevate, and retire scars only under declared authority and evidence rules.
+
+Cellular Shedding V1 tested whether a damaged local cell could be removed from active authority while preserving the correct route-authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary.
 
 ## V1 Initial Harness
 
@@ -50,17 +52,15 @@ The primary V2 test used K=5. A route had to complete five consecutive admissibl
 
 The primary V2 result was:
 
-B_NAIVE_CACHE wrong bypasses: 35.
+```text
+B_NAIVE_CACHE wrong bypasses: 35
+C_TIMER_BOUND wrong bypasses: 33
+D_REQUALIFYING wrong bypasses: 0
 
-C_TIMER_BOUND wrong bypasses: 33.
-
-D_REQUALIFYING wrong bypasses: 0.
-
-B_NAIVE_CACHE fallback rate: approximately 7.4 percent.
-
-C_TIMER_BOUND fallback rate: approximately 36.3 percent.
-
-D_REQUALIFYING fallback rate: approximately 17.23 percent.
+B_NAIVE_CACHE fallback rate: approximately 7.4 percent
+C_TIMER_BOUND fallback rate: approximately 36.3 percent
+D_REQUALIFYING fallback rate: approximately 17.23 percent
+```
 
 Arm D eliminated wrong bypasses during the measured V2 recovery workload. It did not remain permanently locked in fallback. Thirty-five route instances earned bypass authority back. Five route instances remained deprecated.
 
@@ -82,17 +82,15 @@ All 15 borderline route instances, consisting of patterns 5, 6, and 7 across fiv
 
 The primary matched result was:
 
-B_NAIVE_CACHE wrong bypasses: 105.
+```text
+B_NAIVE_CACHE wrong bypasses: 105
+C_TIMER_BOUND wrong bypasses: 123
+D_REQUALIFYING wrong bypasses: 126
 
-C_TIMER_BOUND wrong bypasses: 123.
-
-D_REQUALIFYING wrong bypasses: 126.
-
-B_NAIVE_CACHE actual wrong-bypass rate: 12.04 percent.
-
-C_TIMER_BOUND actual wrong-bypass rate: 25.41 percent.
-
-D_REQUALIFYING actual wrong-bypass rate: 13.86 percent.
+B_NAIVE_CACHE actual wrong-bypass rate: 12.04 percent
+C_TIMER_BOUND actual wrong-bypass rate: 25.41 percent
+D_REQUALIFYING actual wrong-bypass rate: 13.86 percent
+```
 
 Arm D executed 909 matched bypasses. Its result was therefore not caused by permanent suppression or avoidance of exposure.
 
@@ -118,31 +116,26 @@ It acted as a separate authority condition. A learned route could bypass only wh
 
 The V4 comparison was:
 
-V4-C: flat bounded routing without the shape-integrity gate.
-
-V4-D: bounded routing with independent tetrahedral shape-integrity gate.
+```text
+V4-C: flat bounded routing without the shape-integrity gate
+V4-D: bounded routing with independent tetrahedral shape-integrity gate
+```
 
 The primary comparison changed only one authority variable: whether the independent shape-integrity gate was consumed.
 
 The primary V4 result was:
 
-Final verdict: SUPPORTED.
-
-Assertions: 26 of 26 passed.
-
-Eligible matched instances: 105.
-
-V4-C matched wrong bypasses: 404.
-
-V4-D matched wrong bypasses: 14.
-
-Wrong-bypass reduction: 96.53 percent.
-
-Earlier revocation fraction: 100 percent.
-
-Median revocation lead: 1860 milliseconds.
-
-Clean suppression check: passed.
+```text
+Final verdict: SUPPORTED
+Assertions: 26 of 26 passed
+Eligible matched instances: 105
+V4-C matched wrong bypasses: 404
+V4-D matched wrong bypasses: 14
+Wrong-bypass reduction: 96.53 percent
+Earlier revocation fraction: 100 percent
+Median revocation lead: 1860 milliseconds
+Clean suppression check: passed
+```
 
 This result supports the narrow claim that live structural evidence can revoke unsafe bypass authority earlier than the inherited flat route gate under the frozen matched structural-deformation workload.
 
@@ -160,7 +153,9 @@ A scar is a compact rejected-configuration record. It says that a structural con
 
 The governing rule is simple:
 
+```text
 Only betrayed authority creates a scar.
+```
 
 The scar layer does not diagnose why a configuration failed. It is not semantic memory. It is not a full history. It is not cellular shedding. It is not lineage inheritance. It is not prospective filtering. It is not fuzzy matching. It is not an extra-proof protocol.
 
@@ -168,29 +163,64 @@ The frozen scar validation tested geometry-only fingerprinting, write boundary, 
 
 The declared constants were:
 
-K_SOFT_PERSIST equals 3.
-
-T_SCAR_ELEVATE equals 3.
-
-T_SCAR_RETIRE_SUCCESS_CYCLES equals 5.
+```text
+K_SOFT_PERSIST = 3
+T_SCAR_ELEVATE = 3
+T_SCAR_RETIRE_SUCCESS_CYCLES = 5
+```
 
 The primary scar result was:
 
-Final verdict: SUPPORTED.
-
-Assertions: 30 of 30 passed.
-
-Runtime: 0.98 seconds.
-
-stderr: empty.
+```text
+Final verdict: SUPPORTED
+Assertions: 30 of 30 passed
+Runtime: 0.98 seconds
+stderr: empty
+```
 
 The scar layer validated that scars can be written only for betrayed authority, matched by exact geometry-only fingerprint, elevated only after the declared threshold, and retired only after declared successful cycles.
 
-The scar result supports a narrow registry primitive. It does not yet define how damaged structure is cut away, how new structure is grown back, or how a regenerated cell inherits a compact rejected-configuration list.
+The scar result supports a narrow registry primitive. It does not define how damaged structure is cut away, how new structure is grown back, or how a regenerated cell inherits a compact rejected-configuration list.
+
+## Cellular Shedding V1 Local Removal
+
+Cellular Shedding V1 was added after the scar-layer work.
+
+A shed cell is a damaged local structural unit removed from active authority after failure. The cell may remain available for inspection or replay, but it cannot support bypass authority.
+
+The governing rule is simple:
+
+```text
+Do not preserve failed authority through continuity of form.
+```
+
+A structure that looks like the old cell is not trusted merely because it occupies the same position. It must earn authority again under current evidence.
+
+The frozen cellular shedding validation tested dependent-route revocation, independent-route preservation, uncertain-scope fail-closed behavior, invalid-evidence exclusion, betrayed-authority scar writing, cheap retry exclusion, non-admitted candidate exclusion, hard scar reconstruction blocking, soft and restoration scar extra-proof routing, replacement-cell requalification, load-transfer success, load-transfer failure, and replay-log coverage.
+
+The primary cellular shedding result was:
+
+```text
+Final verdict: SUPPORTED
+Assertions: 22 of 22 passed
+Document integrity: OK
+Script filename: cellular_shedding_sim_v1_REVIEWED.py
+```
+
+The run record verified the frozen document hashes:
+
+```text
+Specification SHA-256: 8aaf925877d5bde60826a4a7ae3075d6177afaf41151e9d3a185bd4a1a27f512
+Validation plan SHA-256: 4c073e5cdef9cd1e1812088bbf490775a658900cf790d87d632c049a4d821ae4
+```
+
+Cellular Shedding V1 supports the narrow claim that a local failed cell can be removed from active authority while preserving the correct authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary under the frozen synthetic harness.
+
+It does not validate lineage inheritance. It does not validate fuzzy scar matching. It does not validate prospective filtering. It does not validate production recovery. It does not validate a full extra-proof protocol. It does not prove that every structural failure is locally shed-able. It does not prove uninterrupted service. It does not prove production reliability.
 
 ## Tetrahedral Architecture Boundary
 
-The architecture now separates five responsibilities.
+The architecture now separates six responsibilities.
 
 S_pat identifies the task and route class.
 
@@ -202,7 +232,9 @@ The shape gate consumes live structural state as an independent bypass-authority
 
 The scar layer records rejected structural configurations after betrayed authority.
 
-The router must preserve the distinction among task identity, historical route performance, current structural condition, and rejected-configuration memory.
+The cellular shedding layer removes damaged local structure from active authority and prevents failed authority from continuing through position, history, or reconstruction.
+
+The router must preserve the distinction among task identity, historical route performance, current structural condition, rejected-configuration memory, and local structural removal.
 
 Structural state must come from the tetrahedral coordinator or another authorized structural observer. It must carry source, timestamp, epoch, and applicable scope.
 
@@ -211,6 +243,8 @@ Missing, stale, unverifiable, epoch-mismatched, or inapplicable structural state
 Structural condition must remain an independent gate and must not be blended into the SMS moving average.
 
 Scar matching must remain a separate registry operation and must not mutate shape_integrity or C_success.
+
+Shedding must remain a separate recovery action and must not be treated as route scoring, scar matching, or automatic lineage inheritance.
 
 ## Overall Series Verdict
 
@@ -226,9 +260,11 @@ V4 supports the narrow claim that an independent tetrahedral shape-integrity gat
 
 Scar Layer V1 supports the narrow claim that a rejected-configuration scar registry can write, match, elevate, and retire scars under declared authority and evidence rules.
 
+Cellular Shedding V1 supports the narrow claim that a local failed cell can be removed from active authority while preserving the correct authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary under the frozen synthetic harness.
+
 The series supports bounded authority around learned routing, but not a general claim of superior safety across all workloads.
 
-The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, and capable of leaving behind compact rejected-configuration records after betrayed authority.
+The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, capable of leaving behind compact rejected-configuration records after betrayed authority, and capable of removing damaged local structure from active authority without automatically preserving failed authority.
 
 ## What the Simulation Series Does Not Prove
 
@@ -250,8 +286,6 @@ It does not prove the complete tetrahedral architecture.
 
 It does not prove that GLOBAL scope is the correct deployment scope.
 
-It does not prove cellular shedding.
-
 It does not prove lineage inheritance.
 
 It does not prove prospective filtering.
@@ -261,6 +295,10 @@ It does not prove fuzzy scar matching.
 It does not prove extra-proof recovery behavior.
 
 It does not prove that the system knows why a structural configuration failed.
+
+It does not prove that every structural failure can be locally shed.
+
+It does not prove uninterrupted service during shedding.
 
 ## Series Status
 
@@ -274,10 +312,31 @@ V4 is preserved as the independent shape-integrity gate test.
 
 Scar Layer V1 is preserved as the rejected-configuration registry test.
 
-The current executable scar checkpoint is scripts/rejected_configuration_scar_sim_v1_REVIEWED.py.
+Cellular Shedding V1 is preserved as the local structural-removal test.
 
-The current frozen scar result record is docs/REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md.
+The current executable scar checkpoint is:
 
-The next architectural work is cellular shedding, followed by lineage inheritance.
+```text
+scripts/rejected_configuration_scar_sim_v1_REVIEWED.py
+```
 
+The current frozen scar result record is:
+
+```text
+docs/REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+```
+
+The current executable shedding checkpoint is:
+
+```text
+scripts/cellular_shedding_sim_v1_REVIEWED.py
+```
+
+The current frozen shedding result record is:
+
+```text
+docs/CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+```
+
+The next architectural work is lineage inheritance.
 
