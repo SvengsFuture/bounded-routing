@@ -1,0 +1,39 @@
+Lineage Inheritance Simulation v1 Run Record
+
+Final verdict: SUPPORTED
+Assertions passed: 32/32
+Runtime seconds: 0.004323
+
+Script filename: lineage_inheritance_sim_v1_REVIEWED.py
+Script SHA-256: bd44dd160c1541485e8cc93b9fd3e0d5784940d0f43382d5ea5d2e9ae865798c
+
+Validation plan path: /mnt/data/lineage_inheritance_primary_run_v1/docs/LINEAGE_INHERITANCE_VALIDATION_PLAN_v1_FROZEN.md
+Validation plan SHA-256: 1f02a1fc94b419799b2ee88e26b6d69f2dd1bdeb026fc558c655ad9a57ffa803
+
+Specification path: /mnt/data/lineage_inheritance_primary_run_v1/docs/LINEAGE_INHERITANCE_SPEC_v1_FROZEN.md
+Specification SHA-256: 7aa05bf40a2a787f79e5eed9a7f7d3e1aca3baa83dd2be576ba1ef17458f8ebe
+
+Document integrity: OK
+
+Frozen parameters:
+REQUALIFICATION_THRESHOLD = 5
+PARTIAL_REQUALIFICATION_PROGRESS = 3
+SCOPE_OVERLAP_MODEL = explicit boolean scope_overlap_proven field
+
+Python version: 3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]
+Platform: Linux-4.4.0-x86_64-with-glibc2.41
+
+Random seed: not used
+stderr status: empty if process exits 0
+
+Output inventory:
+lineage_inheritance_v0_1_assertions.csv
+lineage_inheritance_v0_1_child_states.csv
+lineage_inheritance_v0_1_constraints.csv
+lineage_inheritance_v0_1_packets.csv
+lineage_inheritance_v0_1_raw.csv
+lineage_inheritance_v0_1_scar_events.csv
+lineage_inheritance_v0_1_scope_decisions.csv
+lineage_inheritance_v0_1_summary.csv
+lineage_inheritance_v0_1_verdict.csv
+lineage_inheritance_v0_1_run_record.txt

@@ -1,0 +1,33 @@
+assertion_id,description,passed,evidence
+A1,Hard scar constraint returns REJECT_AS_IS.,True,REJECT_AS_IS
+A2,Hard scar constraint places child in REJECTED.,True,REJECTED
+A3,Soft scar constraint returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A4,Soft scar constraint places child in REQUALIFYING.,True,REQUALIFYING
+A5,Restoration scar constraint returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A6,Restoration scar constraint places child in REQUALIFYING.,True,REQUALIFYING
+A7,No scar match does not block child by scar status alone.,True,NO_SCAR_MATCH
+A8,No scar match does not place child in ACTIVE.,True,REQUALIFYING
+A9,Valid no-match child enters REQUALIFYING.,True,REQUALIFYING
+A10,Child cannot inherit active authority.,True,False
+A11,Child cannot inherit bypass permission.,True,False
+A12,Packet containing active authority is rejected for inheritance.,True,contains_active_authority
+A13,Packet containing route confidence as authority is rejected for inheritance.,True,contains_route_confidence_as_authority
+A14,Child cannot inherit parent C_success as permission.,True,None
+A15,Packet containing parent shape integrity as authority is rejected for inheritance.,True,contains_parent_shape_integrity_as_authority
+A16,Child cannot inherit parent shape_integrity as permission.,True,UNKNOWN
+A17,Packet containing full history is rejected for inheritance.,True,contains_full_history
+A18,Stale packet is rejected for inheritance.,True,stale_packet
+A19,Epoch-mismatched packet is rejected for inheritance.,True,epoch_mismatch
+A20,Unknown-scope packet is rejected for inheritance.,True,unknown_scope
+A21,Narrower proven overlap inherits only overlapping constraints.,True,constraint_region_A_only
+A22,Child cannot enter ACTIVE directly from lineage inheritance.,True,REQUALIFYING
+A23,Partial requalification progress is not authority.,True,3/5
+A24,Failure during partial requalification creates no scar.,True,False
+A25,Child failure after completed requalification and active authority creates a scar.,True,c373a637174835cdf4851e85a3cf70dc1cba9fd63a966e27921b13ce04c18471
+A26,"The scar written after post-authority child failure carries the child cell fingerprint, not the parent cell fingerprint.",True,child=c373a637174835cdf4851e85a3cf70dc1cba9fd63a966e27921b13ce04c18471; parent=34f7d6dd1e57d98e488447bbf835bf945b3dd1fc76bd001dd28f1ee89aff3e93; written=c373a637174835cdf4851e85a3cf70dc1cba9fd63a966e27921b13ce04c18471
+A27,Repeated contaminated packets are recorded without source-level escalation claim.,True,rejections=3; escalations=0
+A28,Lineage inheritance does not mutate the scar registry during lookup.,True,before=5c40dcad0b2b1ad117adf55f654b07c89e54810956ddb64e2174a0f1590ba2a2; after=5c40dcad0b2b1ad117adf55f654b07c89e54810956ddb64e2174a0f1590ba2a2
+A29,Lineage inheritance does not mutate parent C_success.,True,before=0.94; after=0.94; child=None
+A30,Lineage inheritance does not mutate parent shape_integrity.,True,before=FAILED; after=FAILED; child=UNKNOWN
+A31,"The lineage event log contains packet id, parent id, child id, epoch, boundary, inherited constraints, rejected constraints, scope decision, provenance decision, requalification requirement, and final child state.",True,logs=17
+A32,The harness produces a deterministic final verdict from the assertion results.,True,assertions_before_A32=31

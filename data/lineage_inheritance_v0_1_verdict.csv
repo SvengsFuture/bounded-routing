@@ -1,0 +1,2 @@
+final_verdict,assertions_passed,assertions_total,runtime_seconds,script,document_integrity_ok,requalification_threshold,partial_requalification_progress,scope_overlap_model
+SUPPORTED,32,32,0.004323,lineage_inheritance_sim_v1_REVIEWED.py,True,5,3,explicit boolean scope_overlap_proven field

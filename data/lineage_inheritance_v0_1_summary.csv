@@ -1,0 +1,18 @@
+scenario,expected,observed,status
+S01_hard_scar_inherited,REJECT_AS_IS and child REJECTED,REJECT_AS_IS; REJECTED,PASS
+S02_soft_scar_inherited,REQUIRE_EXTRA_PROOF and child REQUALIFYING,REQUIRE_EXTRA_PROOF; REQUALIFYING,PASS
+S03_restoration_scar_inherited,REQUIRE_EXTRA_PROOF and child REQUALIFYING,REQUIRE_EXTRA_PROOF; REQUALIFYING,PASS
+S04_no_scar_match,"NO_SCAR_MATCH, child REQUALIFYING, not ACTIVE",NO_SCAR_MATCH; REQUALIFYING,PASS
+S05_active_authority_contamination,packet rejected and no authority,accepted=False; authority=False; bypass=False; reason=contains_active_authority,PASS
+S06_route_confidence_contamination,packet rejected and no C_success authority,accepted=False; child_c_success=None; reason=contains_route_confidence_as_authority,PASS
+S07_shape_integrity_contamination,packet rejected and no shape authority,accepted=False; child_shape=UNKNOWN; reason=contains_parent_shape_integrity_as_authority,PASS
+S08_full_history_rejected,packet rejected,accepted=False; reason=contains_full_history,PASS
+S09_stale_packet,packet rejected,accepted=False; reason=stale_packet,PASS
+S10_epoch_mismatch,packet rejected,accepted=False; reason=epoch_mismatch,PASS
+S11_unknown_scope,packet rejected,accepted=False; reason=unknown_scope,PASS
+S12_narrower_proven_overlap,only overlapping constraints inherited,constraint_region_A_only,PASS
+S13_no_direct_active,child not ACTIVE directly,REQUALIFYING,PASS
+S14_partial_requalification_failure,partial progress not authority and no scar,progress=3; scar=False,PASS
+S15_post_authority_child_failure,child scar written with child fingerprint,scar=True; fp=c373a637174835cdf4851e85a3cf70dc1cba9fd63a966e27921b13ce04c18471,PASS
+S16_repeated_contaminated_source,"three packets rejected, no source escalation claimed",rejections=3; escalations=0,PASS
+S17_isolation_checks,"registry, parent C_success, and parent shape_integrity unchanged",registry=True; c_success=True; shape=True,PASS
