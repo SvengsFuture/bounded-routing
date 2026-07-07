@@ -1,14 +1,14 @@
 # Bounded Routing Simulation Verdict
 
-Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, Scar Layer V1, and Cellular Shedding V1.
+Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, Scar Layer V1, Cellular Shedding V1, and Lineage Inheritance V1.
 
 Current overall verdict: PARTIAL SUPPORT.
 
-The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, fail under live structural conditions, and require local structural removal after a cell loses authority.
+The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, fail under live structural conditions, require local structural removal after a cell loses authority, and require bounded constraint inheritance when a replacement child cell is introduced.
 
 The results support bounded bypass authority as a useful control mechanism. They do not establish that bounded routing is always safer, always faster, or optimal under every workload.
 
-The series now separates six findings.
+The series now separates seven findings.
 
 V1 tested bounded routing under drift, fault, recovery, and oscillation.
 
@@ -21,6 +21,8 @@ V4 tested whether an independent tetrahedral shape-integrity gate could revoke u
 Scar Layer V1 tested whether a minimal rejected-configuration registry could write, match, elevate, and retire scars only under declared authority and evidence rules.
 
 Cellular Shedding V1 tested whether a damaged local cell could be removed from active authority while preserving the correct route-authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary.
+
+Lineage Inheritance V1 tested whether a replacement child cell could inherit compact constraints from a parent context without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity.
 
 ## V1 Initial Harness
 
@@ -218,9 +220,53 @@ Cellular Shedding V1 supports the narrow claim that a local failed cell can be r
 
 It does not validate lineage inheritance. It does not validate fuzzy scar matching. It does not validate prospective filtering. It does not validate production recovery. It does not validate a full extra-proof protocol. It does not prove that every structural failure is locally shed-able. It does not prove uninterrupted service. It does not prove production reliability.
 
+## Lineage Inheritance V1 Constraint Inheritance
+
+Lineage Inheritance V1 was added after cellular shedding.
+
+A lineage packet is the compact constraint record passed from parent context into child context after a failed cell has been shed, quarantined, retired, or replaced.
+
+The governing rule is simple:
+
+```text
+Inherit constraints, not authority.
+```
+
+A replacement child cell may inherit compact constraints. It may not inherit active authority, bypass permission, full history, parent route confidence, or parent shape integrity.
+
+The frozen lineage validation tested hard scar inheritance, soft scar inheritance, restoration scar inheritance, no-scar-match behavior, active-authority contamination, route-confidence contamination, shape-integrity contamination, full-history rejection, stale packet rejection, epoch mismatch rejection, unknown-scope rejection, narrower proven overlap, no direct ACTIVE state, partial requalification failure, post-authority child failure, repeated contaminated-source recording without source escalation, and non-mutation isolation checks.
+
+The declared constants were:
+
+```text
+REQUALIFICATION_THRESHOLD = 5
+PARTIAL_REQUALIFICATION_PROGRESS = 3
+SCOPE_OVERLAP_MODEL = explicit boolean scope_overlap_proven field
+```
+
+The primary lineage result was:
+
+```text
+Final verdict: SUPPORTED
+Assertions: 32 of 32 passed
+Document integrity: OK
+Script filename: lineage_inheritance_sim_v1_REVIEWED.py
+```
+
+The run record verified the frozen document hashes:
+
+```text
+Specification SHA-256: 7aa05bf40a2a787f79e5eed9a7f7d3e1aca3baa83dd2be576ba1ef17458f8ebe
+Validation plan SHA-256: 1f02a1fc94b419799b2ee88e26b6d69f2dd1bdeb026fc558c655ad9a57ffa803
+```
+
+Lineage Inheritance V1 supports the narrow claim that a replacement child cell can inherit compact constraints from a parent context without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity under the frozen synthetic harness.
+
+It does not validate fuzzy scar matching. It does not validate prospective filtering. It does not validate source-level escalation for repeated contaminated packets. It does not validate production recovery. It does not validate a full extra-proof protocol. It does not prove that every child cell is safe. It does not prove that all damaged cells can be replaced. It does not prove that lineage packets are sufficient for all recovery cases. It does not prove production reliability.
+
 ## Tetrahedral Architecture Boundary
 
-The architecture now separates six responsibilities.
+The architecture now separates seven responsibilities.
 
 S_pat identifies the task and route class.
 
@@ -234,7 +280,9 @@ The scar layer records rejected structural configurations after betrayed authori
 
 The cellular shedding layer removes damaged local structure from active authority and prevents failed authority from continuing through position, history, or reconstruction.
 
-The router must preserve the distinction among task identity, historical route performance, current structural condition, rejected-configuration memory, and local structural removal.
+The lineage inheritance layer transfers compact constraints into a replacement child cell path without transferring active authority.
+
+The router must preserve the distinction among task identity, historical route performance, current structural condition, rejected-configuration memory, local structural removal, and constraint inheritance.
 
 Structural state must come from the tetrahedral coordinator or another authorized structural observer. It must carry source, timestamp, epoch, and applicable scope.
 
@@ -245,6 +293,8 @@ Structural condition must remain an independent gate and must not be blended int
 Scar matching must remain a separate registry operation and must not mutate shape_integrity or C_success.
 
 Shedding must remain a separate recovery action and must not be treated as route scoring, scar matching, or automatic lineage inheritance.
+
+Lineage inheritance must remain a separate constraint-transfer action and must not be treated as authority transfer, bypass permission, full history replay, route-confidence inheritance, or shape-integrity inheritance.
 
 ## Overall Series Verdict
 
@@ -262,9 +312,11 @@ Scar Layer V1 supports the narrow claim that a rejected-configuration scar regis
 
 Cellular Shedding V1 supports the narrow claim that a local failed cell can be removed from active authority while preserving the correct authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary under the frozen synthetic harness.
 
+Lineage Inheritance V1 supports the narrow claim that a replacement child cell can inherit compact constraints without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity under the frozen synthetic harness.
+
 The series supports bounded authority around learned routing, but not a general claim of superior safety across all workloads.
 
-The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, capable of leaving behind compact rejected-configuration records after betrayed authority, and capable of removing damaged local structure from active authority without automatically preserving failed authority.
+The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, capable of leaving behind compact rejected-configuration records after betrayed authority, capable of removing damaged local structure from active authority, and capable of passing forward compact constraints without automatically preserving failed authority.
 
 ## What the Simulation Series Does Not Prove
 
@@ -286,7 +338,7 @@ It does not prove the complete tetrahedral architecture.
 
 It does not prove that GLOBAL scope is the correct deployment scope.
 
-It does not prove lineage inheritance.
+It does not prove lineage inheritance beyond the frozen synthetic harness.
 
 It does not prove prospective filtering.
 
@@ -294,11 +346,17 @@ It does not prove fuzzy scar matching.
 
 It does not prove extra-proof recovery behavior.
 
+It does not prove source-level escalation for repeated contaminated packets.
+
 It does not prove that the system knows why a structural configuration failed.
 
 It does not prove that every structural failure can be locally shed.
 
-It does not prove uninterrupted service during shedding.
+It does not prove that every child cell is safe.
+
+It does not prove that all damaged cells can be replaced.
+
+It does not prove uninterrupted service during shedding or reconstruction.
 
 ## Series Status
 
@@ -313,6 +371,8 @@ V4 is preserved as the independent shape-integrity gate test.
 Scar Layer V1 is preserved as the rejected-configuration registry test.
 
 Cellular Shedding V1 is preserved as the local structural-removal test.
+
+Lineage Inheritance V1 is preserved as the constraint-inheritance test.
 
 The current executable scar checkpoint is:
 
@@ -338,5 +398,17 @@ The current frozen shedding result record is:
 docs/CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 ```
 
-The next architectural work is lineage inheritance.
+The current executable lineage checkpoint is:
+
+```text
+scripts/lineage_inheritance_sim_v1_REVIEWED.py
+```
+
+The current frozen lineage result record is:
+
+```text
+docs/LINEAGE_INHERITANCE_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+```
+
+The next architectural work is prospective filtering.
 
