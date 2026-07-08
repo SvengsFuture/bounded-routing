@@ -4,107 +4,127 @@ What each file is and why it exists.
 
 ## Root
 
-### `README.md`
+### README.md
 
-Public entry point. Mechanism summary, current status, V4 shape-gate result, scar-layer result, cellular-shedding result, lineage-inheritance result, scope boundaries, and repository status. Start here.
+Public entry point. Mechanism summary, current status, V4 shape-gate result, scar-layer result, cellular-shedding result, lineage-inheritance result, prospective-filtering result, scope boundaries, and repository status. Start here.
 
-### `ROUTING_VERDICT.md`
+### ROUTING_VERDICT.md
 
 Current bounded-routing verdict record. Summarizes the supported, unsupported, and unresolved findings across the simulation series without retroactively changing earlier tests.
 
-### `FILE_MAP.md`
+### FILE_MAP.md
 
 This file.
 
-## `docs/`
+## docs/
 
-### `bounded_routing_mechanism.md`
+### bounded_routing_mechanism.md
 
 Core mechanism reference. Defines bounded routing, the PRE, ARD, SMS, and IBM components, the admissibility constraint, and the limits of the claim.
 
-### `ard_sms_bypass.md`
+### ard_sms_bypass.md
 
 Component data model and parameter reference. Includes the ARD entry structure, depreciation states, SMS scoring, IBM decision sequence, and anti-oscillation gate logic.
 
-### `validation_plan.md`
+### validation_plan.md
 
 Original V1 validation plan. Defines the three simulation arms, five workload phases, expected behavior, go/no-go criteria, and scope boundaries. Written before the V1 simulation was run.
 
-### `validation_plan_v2.md`
+### validation_plan_v2.md
 
 Pre-run plan for the V2 recovery requalification test. Defines the four arms, fresh post-recovery evidence requirement, route-state transitions, sensitivity values, assertions, and partial-support verdict boundary.
 
-### `validation_plan_v3.md`
+### validation_plan_v3.md
 
 Frozen pre-run plan for the V3 post-requalification relapse test. Defines the matched comparison cohort, three route classes, fixed degradation schedules, K sensitivity sweep, assertions A1 through A16, output requirements, and the pre-declared verdict pipeline.
 
-### `V3_RESULT_AND_VERDICT.md`
+### V3_RESULT_AND_VERDICT.md
 
 Final V3 result record. Reports the matched post-requalification comparison, sensitivity results, assertion coverage, NOT SUPPORTED verdict, and the engineering boundary exposed by the test.
 
-### `TETRAHEDRAL_ROUTING_PRINCIPLE.md`
+### TETRAHEDRAL_ROUTING_PRINCIPLE.md
 
 Project-level architecture principle connecting bounded routing to the tetrahedral recovery substrate. Defines signal separation, provenance, freshness, epoch integrity, structural scope, integration sites, and constraints for tetrahedral routing work.
 
-### `TETRAHEDRAL_SHAPE_INTEGRITY_SPEC_v1_1.md`
+### TETRAHEDRAL_SHAPE_INTEGRITY_SPEC_v1_1.md
 
 Frozen shape-integrity specification. Defines the independent tetrahedral structural condition used by bounded routing as a separate bypass-authority gate.
 
-### `TETRAHEDRAL_SHAPE_INTEGRITY_VALIDATION_PLAN_v1.md`
+### TETRAHEDRAL_SHAPE_INTEGRITY_VALIDATION_PLAN_v1.md
 
 Frozen V4 validation plan for the shape-integrity gate. Defines the matched structural-deformation workload, comparison arms, assertions, expected outputs, and verdict boundary.
 
-### `V4_SHAPE_GATE_VERDICT.md`
+### V4_SHAPE_GATE_VERDICT.md
 
 Final V4 shape-gate result record. Reports the SUPPORTED verdict, 26/26 assertions, 96.53 percent wrong-bypass reduction, clean suppression check, and limits of the claim.
 
-### `REJECTED_CONFIGURATION_SCAR_SPEC_v1_REVISED.md`
+### REJECTED_CONFIGURATION_SCAR_SPEC_v1_REVISED.md
 
 Revised scar-layer specification. Defines the rejected-configuration scar primitive and the governing rule that only betrayed authority creates a scar.
 
-### `REJECTED_CONFIGURATION_SCAR_VALIDATION_PLAN_v1_FROZEN.md`
+### REJECTED_CONFIGURATION_SCAR_VALIDATION_PLAN_v1_FROZEN.md
 
 Frozen scar validation plan. Defines the scar write boundary, geometry-only fingerprinting, match behavior, elevation threshold, retirement rule, assertions, and scope exclusions.
 
-### `REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md`
+### REJECTED_CONFIGURATION_SCAR_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 
 Final scar validation result record. Reports the SUPPORTED verdict, 30/30 assertions, clean stderr, runtime, hashes, and limits of the scar-layer claim.
 
-### `CELLULAR_SHEDDING_SPEC_v1_FROZEN.md`
+### CELLULAR_SHEDDING_SPEC_v1_FROZEN.md
 
 Frozen cellular shedding specification. Defines local structural removal after a damaged cell loses authority, including shed boundaries, authority revocation, scar interaction, replacement-cell requalification, load transfer, and non-claims.
 
-### `CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md`
+### CELLULAR_SHEDDING_VALIDATION_PLAN_v1_FROZEN.md
 
 Frozen cellular shedding validation plan. Defines the narrow V1 test boundary, twelve scenarios, twenty-two assertions, output files, and verdict boundary for the shedding harness.
 
-### `CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md`
+### CELLULAR_SHEDDING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 
 Final cellular shedding result record. Reports the SUPPORTED verdict, 22/22 assertions, document integrity, output hashes, and limits of the cellular-shedding claim.
 
-### `LINEAGE_INHERITANCE_SPEC_v0_2_REVISED.md`
+### LINEAGE_INHERITANCE_SPEC_v0_2_REVISED.md
 
 Revised lineage-inheritance draft specification. Adds the no-scar-match behavior, partial requalification authority boundary, and explicit deferral of contaminated-source escalation.
 
-### `LINEAGE_INHERITANCE_SPEC_v1_FROZEN.md`
+### LINEAGE_INHERITANCE_SPEC_v1_FROZEN.md
 
 Frozen lineage-inheritance specification. Defines constraint inheritance after cellular shedding and the governing rule that replacement cells inherit constraints, not authority.
 
-### `LINEAGE_INHERITANCE_VALIDATION_PLAN_v0_2_REVISED.md`
+### LINEAGE_INHERITANCE_VALIDATION_PLAN_v0_2_REVISED.md
 
 Revised lineage-inheritance validation plan. Adds the frozen harness parameters, explicit scope-overlap model, non-mutation verification methods, and child-fingerprint scar assertion.
 
-### `LINEAGE_INHERITANCE_VALIDATION_PLAN_v1_FROZEN.md`
+### LINEAGE_INHERITANCE_VALIDATION_PLAN_v1_FROZEN.md
 
 Frozen lineage-inheritance validation plan. Defines the V1 test boundary, sixteen scenarios, thirty-two assertions, output files, and verdict boundary for the lineage harness.
 
-### `LINEAGE_INHERITANCE_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md`
+### LINEAGE_INHERITANCE_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 
 Final lineage-inheritance result record. Reports the SUPPORTED verdict, 32/32 assertions, document integrity, frozen parameters, output hashes, and limits of the lineage-inheritance claim.
 
-## `scripts/`
+### PROSPECTIVE_FILTERING_SPEC_v0_2_REVISED.md
 
-### `bounded_routing_sim_v1.py`
+Revised prospective-filtering draft specification. Aligns fallback terminology, defines the no-lineage candidate case, and declares filter-decision precedence when multiple conditions are true.
+
+### PROSPECTIVE_FILTERING_SPEC_v1_FROZEN.md
+
+Frozen prospective-filtering specification. Defines pre-promotion candidate screening and the governing rule that filtering happens before promotion, not after failure.
+
+### PROSPECTIVE_FILTERING_VALIDATION_PLAN_v0_2_REVISED.md
+
+Revised prospective-filtering validation plan. Removes ACTIVE from the filter output state enum, adds verifiability for the no-scar-match assertion, and expands the isolation coverage boundary.
+
+### PROSPECTIVE_FILTERING_VALIDATION_PLAN_v1_FROZEN.md
+
+Frozen prospective-filtering validation plan. Defines the V1 test boundary, twenty-two scenarios, thirty-seven assertions, output files, and verdict boundary for the prospective-filtering harness.
+
+### PROSPECTIVE_FILTERING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+
+Final prospective-filtering result record. Reports the SUPPORTED verdict, 37/37 assertions, document integrity, frozen parameters, tie-break behavior, output hashes, and limits of the prospective-filtering claim.
+
+## scripts/
+
+### bounded_routing_sim_v1.py
 
 Original three-arm simulation harness. Uses stable, drift, fault, recovery, and oscillation phases. Preserved as the V1 technical record.
 
@@ -114,7 +134,7 @@ Run directly:
 python scripts/bounded_routing_sim_v1.py
 ```
 
-### `bounded routing sim v2.py`
+### bounded routing sim v2.py
 
 Four-arm recovery requalification simulation. Compares full analysis, naive cache restoration, timer-bound restoration, and earned restoration using fresh shadow evidence.
 
@@ -124,7 +144,7 @@ Run directly:
 python "scripts/bounded routing sim v2.py"
 ```
 
-### `bounded routing sim v3.py`
+### bounded routing sim v3.py
 
 Final V3 post-requalification relapse simulation. Uses shared pre-generated manifests, matched post-promotion comparison windows, borderline relapse patterns, sensitivity runs at K=3, K=5, and K=8, and assertions A1 through A16.
 
@@ -134,7 +154,7 @@ Run directly:
 python "scripts/bounded routing sim v3.py"
 ```
 
-### `rejected_configuration_scar_sim_v1_REVIEWED.py`
+### rejected_configuration_scar_sim_v1_REVIEWED.py
 
 Reviewed scar validation harness. Implements the frozen scar plan without shedding, lineage inheritance, fuzzy matching, prospective filtering, or extra-proof protocol claims.
 
@@ -144,7 +164,7 @@ Run directly:
 python scripts/rejected_configuration_scar_sim_v1_REVIEWED.py
 ```
 
-### `cellular_shedding_sim_v1_REVIEWED.py`
+### cellular_shedding_sim_v1_REVIEWED.py
 
 Reviewed cellular shedding validation harness. Implements the frozen shedding plan without lineage inheritance, fuzzy scar matching, prospective filtering, production recovery, or a full extra-proof protocol claim.
 
@@ -154,7 +174,7 @@ Run directly:
 python scripts/cellular_shedding_sim_v1_REVIEWED.py
 ```
 
-### `lineage_inheritance_sim_v1_REVIEWED.py`
+### lineage_inheritance_sim_v1_REVIEWED.py
 
 Reviewed lineage-inheritance validation harness. Implements the frozen lineage plan without fuzzy scar matching, prospective filtering, source-level escalation, production recovery, or a full extra-proof protocol claim.
 
@@ -164,239 +184,293 @@ Run directly:
 python scripts/lineage_inheritance_sim_v1_REVIEWED.py
 ```
 
-## `data/`
+### prospective_filtering_sim_v1_REVIEWED.py
 
-### `bounded_routing_v1_raw.csv`
+Reviewed prospective-filtering validation harness. Implements the frozen prospective-filtering plan without fuzzy scar matching, a full extra-proof protocol, source-level escalation, production recovery, or active-authority claims.
+
+Run directly:
+
+```bash
+python scripts/prospective_filtering_sim_v1_REVIEWED.py
+```
+
+## data/
+
+### bounded_routing_v1_raw.csv
 
 One row per task, arm, and seed from the V1 harness.
 
-### `bounded_routing_v1_summary.csv`
+### bounded_routing_v1_summary.csv
 
 Aggregated V1 metrics by arm and workload phase.
 
-### `bounded routing v2 recovery summary.csv`
+### bounded routing v2 recovery summary.csv
 
 Primary V2 recovery results. Records wrong bypasses, wrong-bypass rates, fallback behavior, requalification timing, and final route states.
 
-### `bounded routing v2 sensitivity summary.csv`
+### bounded routing v2 sensitivity summary.csv
 
 Sensitivity results for K=3, K=5, and K=8. Shows the tradeoff between faster restoration, fallback cost, and wrong-bypass exposure.
 
-### `bounded_routing_v3_raw.csv`
+### bounded_routing_v3_raw.csv
 
 Complete V3 task-level output across arms, seeds, phases, and K values.
 
-### `bounded_routing_v3_summary.csv`
+### bounded_routing_v3_summary.csv
 
 Aggregated V3 results by arm and workload phase.
 
-### `bounded_routing_v3_recovery_summary.csv`
+### bounded_routing_v3_recovery_summary.csv
 
 Primary V3 recovery-phase metrics, including bypass, wrong-bypass, fallback, and route-state results.
 
-### `bounded_routing_v3_sensitivity_summary.csv`
+### bounded_routing_v3_sensitivity_summary.csv
 
 Arm D sensitivity results for K=3, K=5, and K=8, including requalification timing, fallback cost, wrong bypasses, eligibility, and final route states.
 
-### `bounded_routing_v3_matched_comparison.csv`
+### bounded_routing_v3_matched_comparison.csv
 
 Primary and relapse-only matched cohort results for Arms A, B, C, and D on identical post-requalification task keys.
 
-### `bounded_routing_v3_per_route_instance.csv`
+### bounded_routing_v3_per_route_instance.csv
 
 One row per borderline route instance with promotion timing, degradation onset, eligibility, state history, revocation timing, and per-arm matched metrics.
 
-### `bounded_routing_v3_aggregate_metrics.csv`
+### bounded_routing_v3_aggregate_metrics.csv
 
 Aggregate V3 matched-window, relapse-window, revocation, gate, and requalification metrics.
 
-### `manifest_seed42_v3.csv`
+### manifest_seed42_v3.csv
 
 Shared deterministic task manifest used by every V3 arm for seed 42.
 
-### `manifest_seed99_v3.csv`
+### manifest_seed99_v3.csv
 
 Shared deterministic task manifest used by every V3 arm for seed 99.
 
-### `manifest_seed500_v3.csv`
+### manifest_seed500_v3.csv
 
 Shared deterministic task manifest used by every V3 arm for seed 500.
 
-### `manifest_seed777_v3.csv`
+### manifest_seed777_v3.csv
 
 Shared deterministic task manifest used by every V3 arm for seed 777.
 
-### `manifest_seed1337_v3.csv`
+### manifest_seed1337_v3.csv
 
 Shared deterministic task manifest used by every V3 arm for seed 1337.
 
-### `bounded_routing_v3_run_record.txt`
+### bounded_routing_v3_run_record.txt
 
 Final V3 execution record containing environment versions, runtime, script and artifact hashes, assertion results, verdict path, key metrics, and complete file inventory.
 
-### `rejected_configuration_scar_v1_raw.csv`
+### rejected_configuration_scar_v1_raw.csv
 
 Task-level scar validation output.
 
-### `rejected_configuration_scar_v1_summary.csv`
+### rejected_configuration_scar_v1_summary.csv
 
 Primary scar validation summary metrics.
 
-### `rejected_configuration_scar_v1_scenario_summary.csv`
+### rejected_configuration_scar_v1_scenario_summary.csv
 
 Scenario-level scar validation summary.
 
-### `rejected_configuration_scar_v1_scar_registry.csv`
+### rejected_configuration_scar_v1_scar_registry.csv
 
 Final scar registry output produced by the reviewed scar validation harness.
 
-### `rejected_configuration_scar_v1_assertions.csv`
+### rejected_configuration_scar_v1_assertions.csv
 
 Assertion-by-assertion scar validation results.
 
-### `rejected_configuration_scar_v1_verdict.csv`
+### rejected_configuration_scar_v1_verdict.csv
 
 Final scar verdict output.
 
-### `rejected_configuration_scar_v1_run_record.txt`
+### rejected_configuration_scar_v1_run_record.txt
 
 Scar validation execution record, including runtime, hashes, assertion status, and output inventory.
 
-### `cellular_shedding_v0_1_raw.csv`
+### cellular_shedding_v0_1_raw.csv
 
 Raw event-level cellular shedding validation output.
 
-### `cellular_shedding_v0_1_summary.csv`
+### cellular_shedding_v0_1_summary.csv
 
 Scenario-level cellular shedding validation summary.
 
-### `cellular_shedding_v0_1_cell_states.csv`
+### cellular_shedding_v0_1_cell_states.csv
 
 Cell-state transition output for the shedding validation run.
 
-### `cellular_shedding_v0_1_route_authority.csv`
+### cellular_shedding_v0_1_route_authority.csv
 
 Route-authority decision output showing bypass and fallback behavior across shedding scenarios.
 
-### `cellular_shedding_v0_1_scar_events.csv`
+### cellular_shedding_v0_1_scar_events.csv
 
 Scar write and scar match events produced by the shedding validation harness.
 
-### `cellular_shedding_v0_1_load_transfer.csv`
+### cellular_shedding_v0_1_load_transfer.csv
 
 Load-transfer outcome output showing bounded degraded operation and broader recovery escalation cases.
 
-### `cellular_shedding_v0_1_assertions.csv`
+### cellular_shedding_v0_1_assertions.csv
 
 Assertion-by-assertion cellular shedding validation results.
 
-### `cellular_shedding_v0_1_verdict.csv`
+### cellular_shedding_v0_1_verdict.csv
 
 Final cellular shedding verdict output.
 
-### `cellular_shedding_v0_1_run_record.txt`
+### cellular_shedding_v0_1_run_record.txt
 
 Cellular shedding validation execution record, including runtime, hashes, assertion status, document integrity, and output inventory.
 
-### `lineage_inheritance_v0_1_raw.csv`
+### lineage_inheritance_v0_1_raw.csv
 
 Raw event-level lineage-inheritance validation output.
 
-### `lineage_inheritance_v0_1_summary.csv`
+### lineage_inheritance_v0_1_summary.csv
 
 Scenario-level lineage-inheritance validation summary.
 
-### `lineage_inheritance_v0_1_packets.csv`
+### lineage_inheritance_v0_1_packets.csv
 
 Lineage packet accept/reject output, including contamination, staleness, epoch, and scope decisions.
 
-### `lineage_inheritance_v0_1_child_states.csv`
+### lineage_inheritance_v0_1_child_states.csv
 
 Child-cell state output showing reconstruction, requalification, rejection, active authority, and bypass permission status.
 
-### `lineage_inheritance_v0_1_constraints.csv`
+### lineage_inheritance_v0_1_constraints.csv
 
 Constraint inheritance output showing inherited constraints, rejected constraints, and decision results.
 
-### `lineage_inheritance_v0_1_scar_events.csv`
+### lineage_inheritance_v0_1_scar_events.csv
 
 Scar lookup and scar write events produced by the lineage-inheritance validation harness.
 
-### `lineage_inheritance_v0_1_scope_decisions.csv`
+### lineage_inheritance_v0_1_scope_decisions.csv
 
 Scope-decision output showing matching scope, unknown scope, and narrower proven overlap behavior.
 
-### `lineage_inheritance_v0_1_assertions.csv`
+### lineage_inheritance_v0_1_assertions.csv
 
 Assertion-by-assertion lineage-inheritance validation results.
 
-### `lineage_inheritance_v0_1_verdict.csv`
+### lineage_inheritance_v0_1_verdict.csv
 
 Final lineage-inheritance verdict output.
 
-### `lineage_inheritance_v0_1_run_record.txt`
+### lineage_inheritance_v0_1_run_record.txt
 
 Lineage-inheritance validation execution record, including runtime, hashes, assertion status, document integrity, frozen parameters, and output inventory.
 
-## `plots/`
+### prospective_filtering_v0_1_raw.csv
 
-### `latency_by_phase_v1.png`
+Raw event-level prospective-filtering validation output.
+
+### prospective_filtering_v0_1_summary.csv
+
+Scenario-level prospective-filtering validation summary.
+
+### prospective_filtering_v0_1_packets.csv
+
+Filter-packet output showing evidence, provenance, scope, epoch, contamination, lineage dependency, scar fingerprints, and constraint fields.
+
+### prospective_filtering_v0_1_candidates.csv
+
+Candidate-state output showing filter result state, active-authority status, bypass-permission status, C_success, and shape_integrity fields after filtering.
+
+### prospective_filtering_v0_1_decisions.csv
+
+Filter-decision output showing scar result, lineage result, precedence reason, active-authority grant status, and bypass-permission grant status.
+
+### prospective_filtering_v0_1_constraints.csv
+
+Constraint application output showing applied constraints, rejected constraints, and decision results.
+
+### prospective_filtering_v0_1_scope_decisions.csv
+
+Scope-decision output showing matching scope, explicit narrower overlap, rejected scope, and applied scope behavior.
+
+### prospective_filtering_v0_1_isolation.csv
+
+Isolation-check output showing before-and-after verification for scar registry, lineage packet, C_success, shape_integrity, authority, and bypass permission.
+
+### prospective_filtering_v0_1_assertions.csv
+
+Assertion-by-assertion prospective-filtering validation results.
+
+### prospective_filtering_v0_1_verdict.csv
+
+Final prospective-filtering verdict output.
+
+### prospective_filtering_v0_1_run_record.txt
+
+Prospective-filtering validation execution record, including runtime, hashes, assertion status, document integrity, frozen parameters, and output inventory.
+
+## plots/
+
+### latency_by_phase_v1.png
 
 Mean and p95 latency by arm and V1 workload phase.
 
-### `safety_metrics_v1.png`
+### safety_metrics_v1.png
 
 Admissibility violations and wrong-bypass rates by arm and phase.
 
-### `cost_fallback_v1.png`
+### cost_fallback_v1.png
 
 Structural cost and fallback behavior by arm and phase.
 
-### `oscillation_wrong_bypass_v1.png`
+### oscillation_wrong_bypass_v1.png
 
 Wrong bypasses by phase and oscillation detail across seeds. Shows the strongest V1 anti-oscillation separation.
 
-### `latency_timeseries_v1.png`
+### latency_timeseries_v1.png
 
 Rolling mean latency for seed 42 with phase boundaries marked.
 
-### `recovery_wrong_bypass_timeseries_v3.png`
+### recovery_wrong_bypass_timeseries_v3.png
 
 Cumulative wrong bypasses during the V3 recovery phase for the naive-cache, timer-bound, and requalifying arms.
 
-### `recovery_fallback_timeseries_v3.png`
+### recovery_fallback_timeseries_v3.png
 
 Fallback-rate progression during the V3 recovery phase.
 
-### `requalification_by_pattern_v3.png`
+### requalification_by_pattern_v3.png
 
 Requalification timing by control and borderline relapse pattern, with degradation-onset boundaries shown for the borderline group.
 
-### `post_requalification_matched_v3.png`
+### post_requalification_matched_v3.png
 
 Primary matched-cohort comparison of wrong-bypass count, exposure-normalized rate, and actual wrong-bypass rate.
 
-### `revocation_timeline_v3.png`
+### revocation_timeline_v3.png
 
 Per-instance timing of first wrong bypasses, confidence-gate failure, and Arm D authority blocking after degradation begins.
 
-### `requalification_sensitivity_v3.png`
+### requalification_sensitivity_v3.png
 
 K=3, K=5, and K=8 comparison of Arm D wrong-bypass and fallback rates, with route-state and eligibility counts.
 
-### `scar_v1_assertion_status.png`
+### scar_v1_assertion_status.png
 
 Scar validation assertion-status plot.
 
-### `scar_v1_write_boundary.png`
+### scar_v1_write_boundary.png
 
 Scar validation write-boundary plot showing when scars are and are not created.
 
-### `scar_v1_match_behavior.png`
+### scar_v1_match_behavior.png
 
 Scar validation match-behavior plot showing hard, soft, restoration, and no-match behavior.
 
-### `scar_v1_elevation_retirement.png`
+### scar_v1_elevation_retirement.png
 
 Scar validation elevation and retirement plot.
 
@@ -416,5 +490,7 @@ Cellular Shedding V1 added local structural removal after cell failure. Under th
 
 Lineage Inheritance V1 added constraint inheritance after cellular shedding. Under the frozen lineage validation plan, the reviewed harness passed 32/32 assertions and supported the narrow claim that a replacement child cell can inherit compact constraints without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity.
 
-The next architectural work is prospective filtering.
+Prospective Filtering V1 added pre-promotion candidate screening. Under the frozen prospective-filtering validation plan, the reviewed harness passed 37/37 assertions and supported the narrow claim that a candidate can be screened before promotion without receiving active authority or bypass permission from the filter itself.
+
+The current architectural checkpoint is prospective filtering. The next repository work is verdict/index cleanup, not another architecture layer.
 
