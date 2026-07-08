@@ -1,0 +1,38 @@
+assertion_id,description,passed,evidence
+A1,Hard scar match returns REJECT_AS_IS.,True,REJECT_AS_IS
+A2,Hard scar match places candidate in FILTER_REJECTED.,True,FILTER_REJECTED
+A3,Soft scar match returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A4,Soft scar match places candidate in FILTER_EXTRA_PROOF_REQUIRED.,True,FILTER_EXTRA_PROOF_REQUIRED
+A5,Restoration scar match returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF
+A6,Restoration scar match places candidate in FILTER_EXTRA_PROOF_REQUIRED.,True,FILTER_EXTRA_PROOF_REQUIRED
+A7,No scar match does not prove safety. Verified by confirming the filter event log records NO_SCAR_MATCH and the candidate does not enter ACTIVE.,True,event_scar_result=NO_SCAR_MATCH; state=FILTER_PASSED_TO_REQUALIFICATION
+A8,No scar match does not place candidate in ACTIVE.,True,FILTER_PASSED_TO_REQUALIFICATION
+A9,Valid no-match candidate enters FILTER_PASSED_TO_REQUALIFICATION.,True,FILTER_PASSED_TO_REQUALIFICATION
+A10,Candidate cannot receive active authority from prospective filtering.,True,False
+A11,Candidate cannot receive bypass permission from prospective filtering.,True,False
+A12,Packet containing active authority returns QUARANTINE.,True,QUARANTINE; contains_active_authority
+A13,Packet containing bypass permission returns QUARANTINE.,True,QUARANTINE; contains_bypass_permission
+A14,Packet containing route confidence as authority returns QUARANTINE.,True,QUARANTINE; contains_route_confidence_as_authority
+A15,Candidate cannot inherit C_success as authority.,True,None
+A16,Packet containing parent shape integrity as authority returns QUARANTINE.,True,QUARANTINE; contains_parent_shape_integrity_as_authority
+A17,Candidate cannot inherit parent shape_integrity as authority.,True,UNKNOWN
+A18,Packet containing full history as admission evidence returns QUARANTINE.,True,QUARANTINE; contains_full_history_as_admission
+A19,Stale packet returns QUARANTINE.,True,QUARANTINE; stale_packet
+A20,Invalid provenance returns QUARANTINE.,True,QUARANTINE; invalid_provenance
+A21,Epoch mismatch returns QUARANTINE.,True,QUARANTINE; epoch_mismatch
+A22,Unknown scope returns QUARANTINE.,True,QUARANTINE; unknown_scope
+A23,Narrower proven overlap applies only declared overlapping constraints.,True,constraint_region_A_only
+A24,Candidate with no lineage packet receives no inherited constraints.,True,NO_LINEAGE_PACKET; constraints=
+A25,"Candidate with no lineage packet may pass only to requalification, not ACTIVE.",True,FILTER_PASSED_TO_REQUALIFICATION
+A26,Candidate depending on invalid lineage evidence returns QUARANTINE.,True,QUARANTINE; invalid_lineage_dependency:invalid
+A27,Valid hard inherited lineage constraint returns REJECT_AS_IS.,True,REJECT_AS_IS; REJECT_AS_IS
+A28,Valid soft inherited lineage constraint returns REQUIRE_EXTRA_PROOF.,True,REQUIRE_EXTRA_PROOF; REQUIRE_EXTRA_PROOF
+A29,Contaminated packet with hard scar match returns QUARANTINE before trusted scar result.,True,QUARANTINE; scar=NOT_EVALUATED_DUE_TO_PRECEDENCE; reason=contains_active_authority
+A30,Filter lookup does not mutate scar registry. Verification method: stable hash or serialized snapshot before filtering and after filtering must match.,True,before=49da2856cba42a1c98ed8c4065be9d9fd1b14a93398d5027f4bb282af59f5930; after=49da2856cba42a1c98ed8c4065be9d9fd1b14a93398d5027f4bb282af59f5930
+A31,Filter lookup does not mutate lineage packet. Verification method: stable hash or serialized snapshot before filtering and after filtering must match.,True,before=36d5470e356588cbcc497bfed28a0599a55af7f6819d0dee915ce45754e708b5; after=36d5470e356588cbcc497bfed28a0599a55af7f6819d0dee915ce45754e708b5
+A32,Filter lookup does not mutate C_success. Verification method: before-and-after C_success values must match.,True,before=0.51; after=0.51
+A33,Filter lookup does not mutate shape_integrity. Verification method: before-and-after shape_integrity values must match.,True,before=CURRENT_VERIFIED; after=CURRENT_VERIFIED
+A34,Filter lookup does not mutate active authority or bypass permission into true. Verification method: before-and-after authority and bypass fields must remain false.,True,"before={""active_authority"": false, ""bypass_permission"": false}; after={""active_authority"": false, ""bypass_permission"": false}"
+A35,Repeated contaminated packets are recorded without source-level escalation claim.,True,rejections=3; escalations=0
+A36,"The filter event log contains candidate id, fingerprint, scope, epoch, provenance, scar result, lineage result, scope decision, filter decision, extra-proof status, requalification allowance, authority grant status, and bypass grant status.",True,logs=23
+A37,The harness produces a deterministic final verdict from assertion results.,True,assertions_before_A37=36

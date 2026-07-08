@@ -1,0 +1,2 @@
+final_verdict,assertions_passed,assertions_total,runtime_seconds,script,document_integrity_ok,scope_overlap_model,filter_decision_precedence,scar_match_model,extra_proof_protocol,source_escalation
+SUPPORTED,37,37,0.002032,prospective_filtering_sim_v1_REVIEWED.py,True,explicit boolean scope_overlap_proven field,"evidence, provenance, epoch, scope, contamination, hard scar, soft/restoration scar, lineage constraint, no-match pass",exact fingerprint only,not implemented; REQUIRE_EXTRA_PROOF is a routing state only,not implemented; repeated contamination is recorded only

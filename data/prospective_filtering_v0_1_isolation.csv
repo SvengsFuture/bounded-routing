@@ -1,0 +1,6 @@
+scenario,check_name,before,after,passed
+S20_isolation_checks,scar_registry_non_mutation,49da2856cba42a1c98ed8c4065be9d9fd1b14a93398d5027f4bb282af59f5930,49da2856cba42a1c98ed8c4065be9d9fd1b14a93398d5027f4bb282af59f5930,True
+S20_isolation_checks,lineage_packet_non_mutation,36d5470e356588cbcc497bfed28a0599a55af7f6819d0dee915ce45754e708b5,36d5470e356588cbcc497bfed28a0599a55af7f6819d0dee915ce45754e708b5,True
+S20_isolation_checks,C_success_non_mutation,0.51,0.51,True
+S20_isolation_checks,shape_integrity_non_mutation,CURRENT_VERIFIED,CURRENT_VERIFIED,True
+S20_isolation_checks,authority_and_bypass_non_mutation,"{""active_authority"": false, ""bypass_permission"": false}","{""active_authority"": false, ""bypass_permission"": false}",True

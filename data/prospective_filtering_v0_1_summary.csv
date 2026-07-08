@@ -1,0 +1,22 @@
+scenario,expected,observed,status
+S01_valid_hard_scar_match,REJECT_AS_IS and FILTER_REJECTED,REJECT_AS_IS; FILTER_REJECTED,PASS
+S02_valid_soft_scar_match,REQUIRE_EXTRA_PROOF and FILTER_EXTRA_PROOF_REQUIRED,REQUIRE_EXTRA_PROOF; FILTER_EXTRA_PROOF_REQUIRED,PASS
+S03_valid_restoration_scar_match,REQUIRE_EXTRA_PROOF and FILTER_EXTRA_PROOF_REQUIRED,REQUIRE_EXTRA_PROOF; FILTER_EXTRA_PROOF_REQUIRED,PASS
+S04_no_scar_match,"NO_SCAR_MATCH, pass only to requalification",NO_SCAR_MATCH; FILTER_PASSED_TO_REQUALIFICATION,PASS
+S05_active_authority_contamination,QUARANTINE and no authority,QUARANTINE; authority=False,PASS
+S06_bypass_permission_contamination,QUARANTINE and no bypass,QUARANTINE; bypass=False,PASS
+S07_route_confidence_as_authority,QUARANTINE and C_success not authority,QUARANTINE; c_success=None,PASS
+S08_parent_shape_integrity_as_authority,QUARANTINE and shape not authority,QUARANTINE; shape=UNKNOWN,PASS
+S09_full_history_as_admission,QUARANTINE,QUARANTINE; contains_full_history_as_admission,PASS
+S10_stale_evidence,QUARANTINE,QUARANTINE; stale_packet,PASS
+S11_invalid_provenance,QUARANTINE,QUARANTINE; invalid_provenance,PASS
+S12_epoch_mismatch,QUARANTINE,QUARANTINE; epoch_mismatch,PASS
+S13_unknown_scope,QUARANTINE,QUARANTINE; unknown_scope,PASS
+S14_narrower_proven_overlap,only declared overlapping constraints applied,constraint_region_A_only,PASS
+S15_no_lineage_packet,no inherited constraints and pass only to requalification,NO_LINEAGE_PACKET; FILTER_PASSED_TO_REQUALIFICATION,PASS
+S16_invalid_lineage_dependency,QUARANTINE,QUARANTINE; invalid_lineage_dependency:invalid,PASS
+S17_valid_hard_lineage_constraint,REJECT_AS_IS,REJECT_AS_IS; REJECT_AS_IS,PASS
+S18_valid_soft_lineage_constraint,REQUIRE_EXTRA_PROOF,REQUIRE_EXTRA_PROOF; REQUIRE_EXTRA_PROOF,PASS
+S19_contamination_precedence,QUARANTINE before trusted hard scar,QUARANTINE; scar=NOT_EVALUATED_DUE_TO_PRECEDENCE; reason=contains_active_authority,PASS
+S20_isolation_checks,all isolation snapshots unchanged,registry=True; packet=True; C=True; shape=True; authority=True,PASS
+S21_repeated_contaminated_source,"three packets rejected, no source escalation claimed",rejections=3; escalations=0,PASS

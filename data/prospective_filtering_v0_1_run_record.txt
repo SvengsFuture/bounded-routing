@@ -1,0 +1,42 @@
+Prospective Filtering Simulation v1 Run Record
+
+Final verdict: SUPPORTED
+Assertions passed: 37/37
+Runtime seconds: 0.002032
+
+Script filename: prospective_filtering_sim_v1_REVIEWED.py
+Script SHA-256: 2f538acd8cc8bf2b9bdde4b8d13fca83d00fb06d8453efc584ab0ccb32053a0d
+
+Validation plan path: /mnt/data/prospective_filtering_primary_run_v1/docs/PROSPECTIVE_FILTERING_VALIDATION_PLAN_v1_FROZEN.md
+Validation plan SHA-256: 58ffccde8d5f96e7330f1d3e62ad6745909ef94a70db18b2be750aa3c5342e5c
+
+Specification path: /mnt/data/prospective_filtering_primary_run_v1/docs/PROSPECTIVE_FILTERING_SPEC_v1_FROZEN.md
+Specification SHA-256: 01c7dda142d63aebc1f739c35b0ea23e15ac91c578f9593cdedcd903a33fc3b0
+
+Document integrity: OK
+
+Frozen parameters:
+SCOPE_OVERLAP_MODEL = explicit boolean scope_overlap_proven field
+FILTER_DECISION_PRECEDENCE = evidence, provenance, epoch, scope, contamination, hard scar, soft/restoration scar, lineage constraint, no-match pass
+SCAR_MATCH_MODEL = exact fingerprint only
+EXTRA_PROOF_PROTOCOL = not implemented; REQUIRE_EXTRA_PROOF is a routing state only
+SOURCE_ESCALATION = not implemented; repeated contamination is recorded only
+
+Python version: 3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]
+Platform: Linux-4.4.0-x86_64-with-glibc2.41
+
+Random seed: not used
+stderr status: empty if process exits 0
+
+Output inventory:
+prospective_filtering_v0_1_assertions.csv
+prospective_filtering_v0_1_candidates.csv
+prospective_filtering_v0_1_constraints.csv
+prospective_filtering_v0_1_decisions.csv
+prospective_filtering_v0_1_isolation.csv
+prospective_filtering_v0_1_packets.csv
+prospective_filtering_v0_1_raw.csv
+prospective_filtering_v0_1_scope_decisions.csv
+prospective_filtering_v0_1_summary.csv
+prospective_filtering_v0_1_verdict.csv
+prospective_filtering_v0_1_run_record.txt
