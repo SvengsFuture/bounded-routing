@@ -1,14 +1,14 @@
 # Bounded Routing Simulation Verdict
 
-Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, Scar Layer V1, Cellular Shedding V1, and Lineage Inheritance V1.
+Series: V1 initial harness, V2 recovery requalification, V3 post-authority relapse, V4 shape-integrity gate, Scar Layer V1, Cellular Shedding V1, Lineage Inheritance V1, and Prospective Filtering V1.
 
 Current overall verdict: PARTIAL SUPPORT.
 
-The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, fail under live structural conditions, require local structural removal after a cell loses authority, and require bounded constraint inheritance when a replacement child cell is introduced.
+The simulation series tests whether learned routes should be allowed to bypass full analysis while operating conditions remain inside declared bounds. It also tests what happens when those conditions drift, oscillate, recover after disruption, degrade again after bypass authority has been restored, fail under live structural conditions, require local structural removal after a cell loses authority, require bounded constraint inheritance when a replacement child cell is introduced, and require candidate screening before promotion.
 
 The results support bounded bypass authority as a useful control mechanism. They do not establish that bounded routing is always safer, always faster, or optimal under every workload.
 
-The series now separates seven findings.
+The series now separates eight findings.
 
 V1 tested bounded routing under drift, fault, recovery, and oscillation.
 
@@ -23,6 +23,8 @@ Scar Layer V1 tested whether a minimal rejected-configuration registry could wri
 Cellular Shedding V1 tested whether a damaged local cell could be removed from active authority while preserving the correct route-authority boundary, scar boundary, replacement boundary, and load-transfer escalation boundary.
 
 Lineage Inheritance V1 tested whether a replacement child cell could inherit compact constraints from a parent context without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity.
+
+Prospective Filtering V1 tested whether a candidate replacement, reconstruction, route, child cell, or local structural configuration could be screened before promotion without receiving active authority or bypass permission from the filter itself.
 
 ## V1 Initial Harness
 
@@ -85,13 +87,13 @@ All 15 borderline route instances, consisting of patterns 5, 6, and 7 across fiv
 The primary matched result was:
 
 ```text
-B_NAIVE_CACHE wrong bypasses: 105
-C_TIMER_BOUND wrong bypasses: 123
-D_REQUALIFYING wrong bypasses: 126
+B_NAIVE_CACHE wrong bypasses:           105
+C_TIMER_BOUND wrong bypasses:           123
+D_REQUALIFYING wrong bypasses:          126
 
 B_NAIVE_CACHE actual wrong-bypass rate: 12.04 percent
 C_TIMER_BOUND actual wrong-bypass rate: 25.41 percent
-D_REQUALIFYING actual wrong-bypass rate: 13.86 percent
+D_REQUALIFYING actual wrong-bypass rate:13.86 percent
 ```
 
 Arm D executed 909 matched bypasses. Its result was therefore not caused by permanent suppression or avoidance of exposure.
@@ -112,7 +114,7 @@ V4 tested the mechanism that V3 left unresolved.
 
 V3 showed that route-level scalar confidence was too slow to serve as the only post-promotion degradation detector. V4 added an independent tetrahedral structural signal as a conjunctive authority gate.
 
-The V4 shape gate did not replace C_success. It did not blend structural state into route confidence. It did not repair or reinterpret the route score.
+The V4 shape gate did not replace `C_success`. It did not blend structural state into route confidence. It did not repair or reinterpret the route score.
 
 It acted as a separate authority condition. A learned route could bypass only when both the ordinary route gates and the independent shape-integrity gate were admissible.
 
@@ -161,7 +163,7 @@ Only betrayed authority creates a scar.
 
 The scar layer does not diagnose why a configuration failed. It is not semantic memory. It is not a full history. It is not cellular shedding. It is not lineage inheritance. It is not prospective filtering. It is not fuzzy matching. It is not an extra-proof protocol.
 
-The frozen scar validation tested geometry-only fingerprinting, write boundary, cheap failure exclusion, non-admitted candidate exclusion, invalid evidence exclusion, hard scar behavior, soft scar behavior, restoration scar behavior, failure-count increment rules, elevation threshold, retirement rule, and isolation from shape_integrity and C_success.
+The frozen scar validation tested geometry-only fingerprinting, write boundary, cheap failure exclusion, non-admitted candidate exclusion, invalid evidence exclusion, hard scar behavior, soft scar behavior, restoration scar behavior, failure-count increment rules, elevation threshold, retirement rule, and isolation from `shape_integrity` and `C_success`.
 
 The declared constants were:
 
@@ -264,15 +266,71 @@ Lineage Inheritance V1 supports the narrow claim that a replacement child cell c
 
 It does not validate fuzzy scar matching. It does not validate prospective filtering. It does not validate source-level escalation for repeated contaminated packets. It does not validate production recovery. It does not validate a full extra-proof protocol. It does not prove that every child cell is safe. It does not prove that all damaged cells can be replaced. It does not prove that lineage packets are sufficient for all recovery cases. It does not prove production reliability.
 
+## Prospective Filtering V1 Pre-Promotion Screening
+
+Prospective Filtering V1 was added after lineage inheritance.
+
+A prospective filter is a pre-promotion screening operation applied to a candidate replacement, reconstruction, route, child cell, or local structural configuration.
+
+The governing rule is simple:
+
+```text
+Filter before promotion, not after failure.
+```
+
+A candidate may be rejected as-is.
+
+A candidate may be required to provide extra proof.
+
+A candidate may be quarantined when evidence, provenance, epoch, scope, lineage dependency, or contamination is invalid.
+
+A candidate may pass to requalification.
+
+The filter may not grant active authority.
+
+The filter may not grant bypass permission.
+
+The frozen prospective-filtering validation tested hard scar matching, soft scar matching, restoration scar matching, no-scar-match behavior, active-authority contamination, bypass-permission contamination, route-confidence contamination, parent-shape-integrity contamination, full-history contamination, stale evidence, invalid provenance, epoch mismatch, unknown scope, narrower proven overlap, no-lineage candidate handling, invalid-lineage dependency, hard inherited lineage constraint, soft inherited lineage constraint, contamination precedence, isolation checks, repeated contaminated-source recording without source escalation, and event-log coverage.
+
+The declared constants were:
+
+```text
+SCOPE_OVERLAP_MODEL = explicit boolean scope_overlap_proven field
+FILTER_DECISION_PRECEDENCE = evidence, provenance, epoch, scope, contamination, hard scar, soft/restoration scar, lineage constraint, no-match pass
+SCAR_MATCH_MODEL = exact fingerprint only
+EXTRA_PROOF_PROTOCOL = not implemented; REQUIRE_EXTRA_PROOF is a routing state only
+SOURCE_ESCALATION = not implemented; repeated contamination is recorded only
+```
+
+The primary prospective-filtering result was:
+
+```text
+Final verdict: SUPPORTED
+Assertions: 37 of 37 passed
+Document integrity: OK
+Script filename: prospective_filtering_sim_v1_REVIEWED.py
+```
+
+The run record verified the frozen document hashes:
+
+```text
+Specification SHA-256: 01c7dda142d63aebc1f739c35b0ea23e15ac91c578f9593cdedcd903a33fc3b0
+Validation plan SHA-256: 58ffccde8d5f96e7330f1d3e62ad6745909ef94a70db18b2be750aa3c5342e5c
+```
+
+Prospective Filtering V1 supports the narrow claim that a candidate can be screened before promotion without receiving active authority or bypass permission from the filter itself under the frozen synthetic harness.
+
+It does not validate fuzzy scar matching. It does not validate a full extra-proof protocol. It does not validate source-level escalation for repeated contaminated packets. It does not validate production recovery. It does not prove that every unsafe candidate can be detected before requalification. It does not prove that every safe candidate can be admitted. It does not prove that a clean filter result is authority. It does not prove production reliability.
+
 ## Tetrahedral Architecture Boundary
 
-The architecture now separates seven responsibilities.
+The architecture now separates eight responsibilities.
 
-S_pat identifies the task and route class.
+`S_pat` identifies the task and route class.
 
-C_success records historical route performance.
+`C_success` records historical route performance.
 
-shape_integrity represents the current authorized structural condition of the tetrahedral substrate.
+`shape_integrity` represents the current authorized structural condition of the tetrahedral substrate.
 
 The shape gate consumes live structural state as an independent bypass-authority condition.
 
@@ -282,7 +340,9 @@ The cellular shedding layer removes damaged local structure from active authorit
 
 The lineage inheritance layer transfers compact constraints into a replacement child cell path without transferring active authority.
 
-The router must preserve the distinction among task identity, historical route performance, current structural condition, rejected-configuration memory, local structural removal, and constraint inheritance.
+The prospective filtering layer consumes scars, lineage constraints, candidate evidence, scope, provenance, epoch, and contamination checks before promotion without granting authority.
+
+The router must preserve the distinction among task identity, historical route performance, current structural condition, rejected-configuration memory, local structural removal, constraint inheritance, and pre-promotion filtering.
 
 Structural state must come from the tetrahedral coordinator or another authorized structural observer. It must carry source, timestamp, epoch, and applicable scope.
 
@@ -290,11 +350,13 @@ Missing, stale, unverifiable, epoch-mismatched, or inapplicable structural state
 
 Structural condition must remain an independent gate and must not be blended into the SMS moving average.
 
-Scar matching must remain a separate registry operation and must not mutate shape_integrity or C_success.
+Scar matching must remain a separate registry operation and must not mutate `shape_integrity` or `C_success`.
 
-Shedding must remain a separate recovery action and must not be treated as route scoring, scar matching, or automatic lineage inheritance.
+Shedding must remain a separate recovery action and must not be treated as route scoring, scar matching, automatic lineage inheritance, or prospective filtering.
 
-Lineage inheritance must remain a separate constraint-transfer action and must not be treated as authority transfer, bypass permission, full history replay, route-confidence inheritance, or shape-integrity inheritance.
+Lineage inheritance must remain a separate constraint-transfer action and must not be treated as authority transfer, bypass permission, full history replay, route-confidence inheritance, shape-integrity inheritance, or prospective filtering.
+
+Prospective filtering must remain a separate pre-promotion screening action and must not be treated as active authority, bypass permission, automatic safety, fuzzy matching, full extra-proof behavior, or source-level escalation.
 
 ## Overall Series Verdict
 
@@ -314,9 +376,11 @@ Cellular Shedding V1 supports the narrow claim that a local failed cell can be r
 
 Lineage Inheritance V1 supports the narrow claim that a replacement child cell can inherit compact constraints without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity under the frozen synthetic harness.
 
+Prospective Filtering V1 supports the narrow claim that a candidate can be screened before promotion without receiving active authority or bypass permission from the filter itself under the frozen synthetic harness.
+
 The series supports bounded authority around learned routing, but not a general claim of superior safety across all workloads.
 
-The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, capable of leaving behind compact rejected-configuration records after betrayed authority, capable of removing damaged local structure from active authority, and capable of passing forward compact constraints without automatically preserving failed authority.
+The strongest architectural result is that bypass authority can be treated as temporary, conditional, revocable, structurally gated, capable of leaving behind compact rejected-configuration records after betrayed authority, capable of removing damaged local structure from active authority, capable of passing forward compact constraints without automatically preserving failed authority, and capable of screening a candidate before promotion without granting authority.
 
 ## What the Simulation Series Does Not Prove
 
@@ -340,7 +404,7 @@ It does not prove that GLOBAL scope is the correct deployment scope.
 
 It does not prove lineage inheritance beyond the frozen synthetic harness.
 
-It does not prove prospective filtering.
+It does not prove prospective filtering beyond the frozen synthetic harness.
 
 It does not prove fuzzy scar matching.
 
@@ -355,6 +419,12 @@ It does not prove that every structural failure can be locally shed.
 It does not prove that every child cell is safe.
 
 It does not prove that all damaged cells can be replaced.
+
+It does not prove that every unsafe candidate can be detected before requalification.
+
+It does not prove that every safe candidate can be admitted.
+
+It does not prove that a clean filter result is authority.
 
 It does not prove uninterrupted service during shedding or reconstruction.
 
@@ -373,6 +443,8 @@ Scar Layer V1 is preserved as the rejected-configuration registry test.
 Cellular Shedding V1 is preserved as the local structural-removal test.
 
 Lineage Inheritance V1 is preserved as the constraint-inheritance test.
+
+Prospective Filtering V1 is preserved as the pre-promotion screening test.
 
 The current executable scar checkpoint is:
 
@@ -410,5 +482,17 @@ The current frozen lineage result record is:
 docs/LINEAGE_INHERITANCE_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 ```
 
-The next architectural work is prospective filtering.
+The current executable prospective-filtering checkpoint is:
+
+```text
+scripts/prospective_filtering_sim_v1_REVIEWED.py
+```
+
+The current frozen prospective-filtering result record is:
+
+```text
+docs/PROSPECTIVE_FILTERING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
+```
+
+The current architectural checkpoint is prospective filtering. The next repository work is review and cleanup, not another architecture layer.
 
