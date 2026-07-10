@@ -1,0 +1,2 @@
+verdict,assertions_ok,discriminating,eligible_instances,minimum_eligible_per_scenario,c_exposed_fraction,suppression_ok,clean_bypass_ratio_d_over_c,d0_shape_denials,d1_shape_denials,structural_ok,c_wrong_bypasses,d_wrong_bypasses,wrong_bypass_reduction,earlier_revocation_fraction,median_revocation_lead_ms,hard_median_tasks_exposed,soft_median_tasks_exposed,bootstrap_ci_low,bootstrap_ci_high,support_boundary_pass,partial_boundary_pass
+SUPPORTED,True,True,105,15,1.0,True,1.0000472850500433,0,0,True,404,14,0.9653465346534653,1.0,1860.0,0.0,1.0,365.0,416.0,True,True
