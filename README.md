@@ -1,8 +1,40 @@
 # Bounded Routing
 
+Bounded Routing is an experimental route authority mechanism for adaptive systems.
+
+A learned route may earn bypass authority, but previous success alone cannot preserve that authority. Bypass remains available only while the conditions upon which it depends remain admissible. When those conditions fail, bypass is revoked, the system falls back to full analysis, and the route must requalify from fresh evidence before bypass authority can return.
+
+This is not an LLM query router, API load balancer, network traffic router, or general-purpose execution authorization system.
+
+```text
+QUALIFY
+   ↓
+BYPASS AUTHORITY
+   ↓
+CONDITIONS REMAIN ADMISSIBLE? ── YES ──→ BOUNDED BYPASS
+   │
+   NO
+   ↓
+REVOKE
+   ↓
+FULL ANALYSIS
+   ↓
+FRESH REQUALIFICATION
+```
+
+## Why This May Matter
+
+As autonomous systems gain authority to invoke tools, modify infrastructure, and produce consequential effects, authorization of the actor and admissibility of the route are separate questions.
+
+An identity or policy system can determine whether an actor is permitted to request an action.
+
+Bounded Routing investigates a different question: whether a previously qualified route still satisfies the structural conditions required for its bypass authority.
+
+The commercial hypothesis is that systems with consequential autonomous execution may need both boundaries. That hypothesis has not yet been validated in production.
+
 ## What This Is
 
-Bounded routing is a route-selection discipline for adaptive systems. It governs when a learned route may bypass full analysis and when the system must fall back.
+Bounded routing governs when a learned route may bypass full analysis and when the system must fall back.
 
 The governing constraint is admissibility, not speed alone.
 
@@ -23,6 +55,30 @@ Cellular shedding removes a damaged local cell from active authority after failu
 Lineage inheritance allows a replacement child cell to inherit compact constraints without inheriting active authority, bypass permission, full history, parent route confidence, or parent shape integrity.
 
 Prospective filtering screens a candidate before promotion. It may reject, quarantine, require extra proof, or pass the candidate to requalification, but it must not grant active authority or bypass permission.
+
+## Independent Structural Witness V5
+
+V5 hardens the evidence path supporting route authority. The governed execution path does not establish its own structural authority.
+
+```text
+TRUSTED STRUCTURAL SOURCE
+        ↓
+INDEPENDENT STRUCTURAL WITNESS
+        ↓
+SIGNED STRUCTURAL RECORD
+        ↓
+AUTHORITY GATE
+        ↓
+STRUCTURAL AUTHORITY + ROUTE ADMISSIBILITY
+        ↓
+BYPASS AUTHORITY
+```
+
+The executable V5 harness currently passes 141 tests.
+
+V5 does not establish physical truth, sensor fidelity, production reliability, or security against compromise of the trusted source or witness. Those remain outside its frozen scope.
+
+See `v5_independent_structural_witness/README.md` for the executable harness, frozen requirements, test boundary, and documented non-goals.
 
 ## Current Status
 
@@ -248,14 +304,6 @@ Prospective Filtering V1 supports the narrow claim that a candidate replacement,
 The supported boundary includes hard scar matching, soft scar matching, restoration scar matching, no-scar-match behavior, contamination rejection, invalid evidence rejection, provenance rejection, epoch mismatch rejection, unknown-scope rejection, narrower proven overlap, no-lineage candidate handling, invalid-lineage dependency blocking, inherited lineage constraints, contamination precedence, isolation checks, repeated contamination recording without source escalation, and event-log coverage.
 
 It does not prove production recovery. It does not prove fuzzy scar matching. It does not prove a full extra-proof protocol. It does not prove source-level escalation. It does not prove that every unsafe candidate can be detected before requalification. It does not prove that every safe candidate can be admitted. It does not prove that a clean filter result is authority.
-
-See:
-
-```text
-docs/PROSPECTIVE_FILTERING_SPEC_v1_FROZEN.md
-docs/PROSPECTIVE_FILTERING_VALIDATION_PLAN_v1_FROZEN.md
-docs/PROSPECTIVE_FILTERING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
-```
 
 ## Simulation Series
 
@@ -543,5 +591,3 @@ Lineage Inheritance V1 defines how a replacement cell inherits compact constrain
 Prospective Filtering V1 defines how those constraints and current candidate evidence are screened before promotion without granting authority.
 
 The next repository work is index cleanup, not another architecture claim. `FILE_MAP.md` and `ROUTING_VERDICT.md` should be brought up to the same checkpoint after this README update.
-
-
