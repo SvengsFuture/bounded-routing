@@ -494,5 +494,13 @@ The current frozen prospective-filtering result record is:
 docs/PROSPECTIVE_FILTERING_V1_PRIMARY_RESULT_SUMMARY_FROZEN.md
 ```
 
-The current architectural checkpoint is prospective filtering. The next repository work is review and cleanup, not another architecture layer.
+Prospective Filtering V1 is the latest checkpoint in the original simulation series. V5 is tracked separately and does not change this series verdict.
 
+
+## Separate V5 witness evidence and EABC mapping
+
+The [V5 independent structural witness harness](v5_independent_structural_witness/README.md) is a separate executable research branch, not another arm of the V1 through Prospective Filtering V1 simulation series. Its README reports 141 passing tests; that claim is scoped to the V5 harness, not to externally effective execution authorization. The test count and its scope should be evaluated against the harness and test matrix.
+
+The frozen [EABC implementation profile](docs/EABC_IP_BR_V5_001.md) maps V5's capabilities and gaps. P5 state binding and P7 evidence correlation remain Partial. Internal replay-watermark commit is not an externally effective execution commit. This section is a pointer to separate evidence and does not revise the simulation series' overall PARTIAL SUPPORT verdict.
+
+See [Research Status, October 10, 2026](docs/RESEARCH_STATUS_2026_10_10.md) for later exploratory work and publication boundaries.
