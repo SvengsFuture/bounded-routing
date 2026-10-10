@@ -590,7 +590,7 @@ Lineage Inheritance V1 defines how a replacement cell inherits compact constrain
 
 Prospective Filtering V1 defines how those constraints and current candidate evidence are screened before promotion without granting authority.
 
-The next repository work is index cleanup, not another architecture claim. `FILE_MAP.md` and `ROUTING_VERDICT.md` should be brought up to the same checkpoint after this README update.
+The prospective-filtering result is the latest checkpoint in the original simulation series. The separate V5 independent structural witness harness and EABC mapping are documented in their own records; neither extends the simulation verdict or establishes authorization of an externally effective consequence.
 
 ## Research status and publication boundary
 
