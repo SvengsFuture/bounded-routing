@@ -494,3 +494,9 @@ Prospective Filtering V1 added pre-promotion candidate screening. Under the froz
 
 The current architectural checkpoint is prospective filtering. The next repository work is verdict/index cleanup, not another architecture layer.
 
+
+## Current research status
+
+### docs/RESEARCH_STATUS_2026_10_10.md
+
+Public research status, navigation, and claim boundaries for the frozen experimental records and exploratory work after V5. Does not modify any frozen document.
