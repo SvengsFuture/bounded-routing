@@ -492,7 +492,7 @@ Lineage Inheritance V1 added constraint inheritance after cellular shedding. Und
 
 Prospective Filtering V1 added pre-promotion candidate screening. Under the frozen prospective-filtering validation plan, the reviewed harness passed 37/37 assertions and supported the narrow claim that a candidate can be screened before promotion without receiving active authority or bypass permission from the filter itself.
 
-The current architectural checkpoint is prospective filtering. The next repository work is verdict/index cleanup, not another architecture layer.
+Prospective Filtering V1 is the latest checkpoint in the original simulation series. V5 is a separate executable witness research branch, not a new verdict in that series.
 
 
 ## Current research status
@@ -500,3 +500,11 @@ The current architectural checkpoint is prospective filtering. The next reposito
 ### docs/RESEARCH_STATUS_2026_10_10.md
 
 Public research status, navigation, and claim boundaries for the frozen experimental records and exploratory work after V5. Does not modify any frozen document.
+
+### docs/EABC_IP_BR_V5_001.md
+
+Frozen EABC implementation profile mapping the V5 independent structural witness to EABC properties. The mapping is not a conformance claim. P5 state binding and P7 evidence correlation remain Partial.
+
+## v5_independent_structural_witness/
+
+Separate V5 executable witness harness. See [V5 harness README](v5_independent_structural_witness/README.md) for architecture references, test instructions, fixture restrictions, and limitations. Key files are `canonical.py`, `canonical_alt.py`, `fixtures.py`, `gate.py`, `witness_source.py`, `test_matrix.py`, and `requirements.txt`; the `docs/` subdirectory contains V5 harness documents. This is not an extension of the original simulation series.
