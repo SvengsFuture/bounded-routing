@@ -78,6 +78,8 @@ The executable V5 harness currently passes 141 tests.
 
 V5 does not establish physical truth, sensor fidelity, production reliability, or security against compromise of the trusted source or witness. Those remain outside its frozen scope.
 
+V5 establishes structural evidence verification and route bypass authority within its declared harness boundary. It does not establish authority validity at an externally effective consequence, complete mediation of external execution paths, or an intrinsically correlated record of external effects.
+
 See `v5_independent_structural_witness/README.md` for the executable harness, frozen requirements, test boundary, and documented non-goals.
 
 ## Current Status
